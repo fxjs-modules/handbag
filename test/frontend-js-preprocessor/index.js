@@ -71,22 +71,24 @@ describe('register: typescript', () => {
     })    
 })
 
-describe('register: rollup', () => {
-    it('registerAsRollupedJavascript', () => {
-        vbox = new vm.SandBox(moduleHash)
+if (process.env.FX_HANDBAG_FULLTEST) {
+    describe('register: rollup', () => {
+        it('registerAsRollupedJavascript', () => {
+            vbox = new vm.SandBox(moduleHash)
 
-        fxHandbag.registers.rollup.registerAsRollupedJavascript(vbox)
+            fxHandbag.registers.rollup.registerAsRollupedJavascript(vbox)
 
-        const result = vbox.require('./test.ts', __dirname)
+            const result = vbox.require('./test.ts', __dirname)
 
-        const vbox2 = new vm.SandBox(moduleHash)
-        const tpath = Date.now() + '.js'
-        vbox2.addScript(tpath, result)
+            const vbox2 = new vm.SandBox(moduleHash)
+            const tpath = Date.now() + '.js'
+            vbox2.addScript(tpath, result)
 
-        // test its cjs only
-        const module = vbox2.require(tpath, __dirname)
-        testCjsModule(module)
+            // test its cjs only
+            const module = vbox2.require(tpath, __dirname)
+            testCjsModule(module)
+        })
     })
-})
+}
 
 require.main === module && test.run(console.DEBUG)
