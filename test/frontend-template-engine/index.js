@@ -12,12 +12,21 @@ const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-h
 describe('register: pug', () => {
     let vbox = null
 
-    function testRenderResult (renderedHtml) {
+    const pugLocals = {
+        testVar: Date.now()
+    }
+
+    function testRenderResult (renderedHtml, locals = {
+        testVar: ''
+    }) {
         assert.equal(cheerio(renderedHtml).find('#test').length, 0)
         assert.equal(cheerio(`<div>${renderedHtml}</div>`).find('#test').length, 1)
 
         assert.equal(cheerio(`<div>${renderedHtml}</div>`).find('style').length, 1)
         assert.equal(cheerio(`<div>${renderedHtml}</div>`).find('script').length, 1)
+
+        assert.equal(cheerio(`<div>${renderedHtml}</div>`).find('#test > p').length, 1)
+        assert.equal(cheerio(`<div>${renderedHtml}</div>`).find('#test > p').text(), locals.testVar)
     }
 
     const compilerOptions = {
@@ -32,12 +41,13 @@ describe('register: pug', () => {
         function registerPugAsHtml (vbox) {
             fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
                 suffix: '.pug',
-                compiler: (buf, info) => fxHandbag.vboxUtils.wrapAsString(
+                compiler: (buf, info) => JSON.stringify(
                     fpug.renderFile(info.filename, compilerOptions)
                 )
             })
         }
         registerPugAsHtml(vbox)
+        fxHandbag.registers.pug.hackGlobalForPugRuntime(vbox)
 
         const renderedHtml = vbox.require('./test.pug', __dirname)
         testRenderResult(renderedHtml)
@@ -56,7 +66,7 @@ describe('register: pug', () => {
         function registerPugAsRenderer (vbox) {
             fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
                 suffix: '.pug',
-                compiler: (buf, info) => fpug.compile(buf + '', compilerOptions),
+                compiler: (buf, info) => fpug.compile(buf + '', {...compilerOptions, inlineRuntimeFunctions: Math.random(0, 1) > 0.5}),
                 timeout: 0
             })
         }
@@ -64,13 +74,13 @@ describe('register: pug', () => {
         registerPugAsRenderer(vbox)
 
         const renderer = vbox.require('./test.pug', __dirname)
-        testRenderResult(renderer())
+        testRenderResult(renderer(pugLocals), pugLocals)
 
         const vbox2 = new vm.SandBox(moduleHash)
         fxHandbag.registers.pug.registerPugAsRenderer(vbox2, { compilerOptions })
         assert.equal(
-            vbox.require('./test.pug', __dirname)(),
-            vbox2.require('./test.pug', __dirname)()
+            vbox.require('./test.pug', __dirname)(pugLocals),
+            vbox2.require('./test.pug', __dirname)(pugLocals)
         )
     })
 })
