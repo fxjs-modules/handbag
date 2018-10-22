@@ -121,4 +121,10 @@ For example, you are developing one website's user profile page, which rendered 
 
 All reigsters's option in `@fxjs/handbag` supports `burnout_timeout` option : )
 
+## License
+
+[GPL-3.0](https://opensource.org/licenses/GPL-3.0)
+
+Copyright (c) 2018-present, Richard
+
 [`vbox.setModuleCompiler`]:http://fibjs.org/docs/manual/object/ifs/sandbox.md.html#setModuleCompiler
