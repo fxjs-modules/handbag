@@ -1,10 +1,15 @@
-div#test
-    | 123
-    p #{testVar}
-style
-    :stylus
-        div
-            color red
-script
-    :typescript
-        const a = Date.now() 
+extend ./test.parent.pug
+
+block mainContent
+    div#test
+        | 123
+        p #{testVar}
+    style
+        :stylus
+            div
+                color red
+    script
+        :typescript
+            const a = Date.now()
+
+    include ./test.included.pug
