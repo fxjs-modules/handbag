@@ -1,11 +1,9 @@
 import {
-    setBurnAfterTimeoutVbox,
     setCompilerForVbox,
     wrapAsString
 } from './vbox'
 
 export const vboxUtils = {
-    setBurnAfterTimeoutVbox,
     setCompilerForVbox,
     wrapAsString
 }

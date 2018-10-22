@@ -1,6 +1,9 @@
 import * as plain from './plain'
 export { plain }
 
+import * as image from './image'
+export { image }
+
 import * as stylus from './stylus'
 export { stylus }
 
