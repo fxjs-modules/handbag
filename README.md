@@ -110,6 +110,12 @@ stylus.registerStylusAsCss(vbox, options)
 
 register compiler to require stylus file as rendered html
 
+image.registerImageAsBase64(vbox, options)
+---
+- options.suffix: default `['.png', '.jpg', '.jpeg', '.gif', '.bmp']`
+
+register compiler to require image file as base64 string
+
 
 ## Others
 
