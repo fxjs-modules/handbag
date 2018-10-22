@@ -1,24 +1,48 @@
-function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: {suffix: string|string[], compiler: Function, timeout?: number}) {
+import coroutine = require('coroutine')
+
+interface SetVboxOptions {
+    suffix: string|string[],
+    compiler: Function,
+    compile_to_script?: boolean
+}
+
+interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
+    timeout?: number
+}
+function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
     const timeouts = {}
 
-    const { suffix, compiler, timeout: _timeout = 1000 } = options;
+    const { suffix, compiler, timeout: _timeout = 1000, compile_to_script = false } = options;
     let { __burnout_timeout = 0 } = vbox as any || {}
-    __burnout_timeout = __burnout_timeout && Number.isInteger(__burnout_timeout) ? __burnout_timeout : _timeout
+    if (!Number.isInteger(__burnout_timeout))
+        __burnout_timeout = 0
+    __burnout_timeout = _timeout && Number.isInteger(_timeout) ? _timeout : __burnout_timeout;
+
+    const sync_lock = new coroutine.Lock();
 
     function compilerFn (buf: Class_Buffer, info: any) {
         let compiledContent = compiler(buf, info)
 
         const {filename: mid = ''} = info || {}
 
-        if (timeouts[mid])
+        if (timeouts[mid]) {
             clearTimeout(timeouts[mid])
+            timeouts[mid] = null
+        }
 
         if (__burnout_timeout) {
             timeouts[mid] = setTimeout(() => {
-                vbox.remove(mid)
+                if (vbox.has(mid)) {
+                    sync_lock.acquire()
+                    vbox.remove(mid)
+                    sync_lock.release()
+                }
             }, __burnout_timeout)
         }
 
+        if (compile_to_script) {
+            return compiledContent
+        }
         return `module.exports = ${compiledContent}`
     }
 
@@ -30,7 +54,10 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: {suffix: string|
     suffixArr.forEach(suffix => vbox.setModuleCompiler(suffix, compilerFn))
 }
 
-export function setCompilerForVbox (vbox: Class_SandBox, options: {suffix: string|string[], compiler: Function, burnout_timeout?: number}) {
+interface SetCompilerForVboxOptions extends SetVboxOptions {
+    burnout_timeout?: number,
+}
+export function setCompilerForVbox (vbox: Class_SandBox, options: SetCompilerForVboxOptions) {
     return setBurnAfterTimeoutVbox(vbox, {...options, timeout: options.burnout_timeout || 0})
 }
 

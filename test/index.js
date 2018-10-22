@@ -6,5 +6,6 @@ run('./fs-image')
 
 run('./frontend-template-engine')
 run('./frontend-css-preprocessor')
+run('./frontend-js-preprocessor')
 
-require.main === module && test.run(console.DEBUG)
+require.main === module && test.run(console.DEBUG) || process.exit()

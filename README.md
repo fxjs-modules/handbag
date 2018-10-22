@@ -86,35 +86,63 @@ register functions support options below:
 }
 ```
 
-plain.registerAsPlain(vbox, options)
+`plain.registerAsPlain(vbox, options)`
 ---
 - options.suffix: default `['.txt']`
 
 register compiler to require file as its plain text
 
-pug.registerPugAsRender(vbox, options)
+`pug.registerPugAsRender(vbox, options)`
 ---
 - options.suffix: default `['.pug', '.jade']`
 
 register compiler to require pug file as pug renderer
 
-pug.registerPugAsHtml(vbox, options)
+`pug.registerPugAsHtml(vbox, options)`
 ---
 - options.suffix: default `['.pug', '.jade']`
 
 register compiler to require pug file as rendered html
 
-stylus.registerStylusAsCss(vbox, options)
+`stylus.registerStylusAsCss(vbox, options)`
 ---
 - options.suffix: default `['.styl', '.stylus']`
 
 register compiler to require stylus file as rendered html
 
-image.registerImageAsBase64(vbox, options)
+`typescript.registerTypescriptAsModule(vbox, options)`
+---
+- options.suffix: default `['.ts']`
+
+register compiler to require typescript file as one valid module
+
+`typescript.registerTypescriptAsPlainJavascript(vbox, options)`
+---
+- options.suffix: default `['.ts']`
+
+register compiler to require typescript file as plain javascript string.
+
+`rollup.registerTypescriptAsRollupedJavascript(vbox, options)`
+---
+- options.suffix: default `['.ts', '.tsx']`
+- options.rollupConfig: default `{}`, config passed to 
+    - `const bundle = rollup.rollup({...})`
+    - `bundle.write({...})`
+    - `bundle.generate({...})`
+- options.onGenerateUmdName: default `(buf, info) => 's'`. name for rollup's `umd`/`iife` mode
+
+register compiler to require typescript file as **rolluped** plain javascript string
+
+**require**
+- [fib-rollup]
+- [rollup-plugin-commonjs]
+
+`image.registerImageAsBase64(vbox, options)`
 ---
 - options.suffix: default `['.png', '.jpg', '.jpeg', '.gif', '.bmp']`
 
 register compiler to require image file as base64 string
+
 
 
 ## Others
@@ -134,3 +162,6 @@ All reigsters's option in `@fxjs/handbag` supports `burnout_timeout` option : )
 Copyright (c) 2018-present, Richard
 
 [`vbox.setModuleCompiler`]:http://fibjs.org/docs/manual/object/ifs/sandbox.md.html#setModuleCompiler
+
+[fib-rollup]:https://www.npmjs.com/package/fib-rollup
+[rollup-plugin-commonjs]:https://www.npmjs.com/package/rollup-plugin-commonjs
