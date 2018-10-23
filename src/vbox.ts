@@ -62,5 +62,5 @@ export function setCompilerForVbox (vbox: Class_SandBox, options: SetCompilerFor
 }
 
 export function wrapAsString (content: any) {
-    return `\`${content}\``
+    return JSON.stringify(content)
 }
