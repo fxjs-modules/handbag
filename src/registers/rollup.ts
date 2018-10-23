@@ -9,9 +9,14 @@ export function registerAsRollupedJavascript (vbox, options) {
     const { default: rollup, plugins } = require('fib-rollup');
 
     const { compilerOptions = null, burnout_timeout = 0,
-        rollupConfig = {},
+        rollup: rollupConfig = {},
         onGenerateUmdName = (buf, info) => 'UmdModule'
     } = options || {}
+
+    const {
+        bundleConfig = {},
+        outputConfig = {}
+    } = rollupConfig || {}
 
     setCompilerForVbox(vbox, {
         suffix: SUFFIX,
@@ -23,7 +28,7 @@ export function registerAsRollupedJavascript (vbox, options) {
                     plugins['rollup-plugin-fibjs-resolve'](),
                     require('rollup-plugin-commonjs')()
                 ],
-                ...rollupConfig
+                ...bundleConfig
             })
 
             const { code: rollupedJs } = util.sync(bundle.generate, true)({
@@ -31,7 +36,7 @@ export function registerAsRollupedJavascript (vbox, options) {
                     name: onGenerateUmdName(buf, info),
                     format: 'umd',
                 },
-                ...rollupConfig,
+                ...outputConfig,
             })
 
             return wrapAsString(rollupedJs)

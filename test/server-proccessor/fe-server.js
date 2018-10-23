@@ -30,9 +30,11 @@ exports.createFeServer = function () {
         
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
         suffix: ['m.ts', '.mjs'],
-        rollupConfig: {
-            external: ['vue'],
-            plugins: rollupPlugins
+        rollup: {
+            bundleConfig: {
+                external: ['vue'],
+                plugins: rollupPlugins
+            }
         },
         burnout_timeout,
         onGenerateUmdName: (buf, info) => {
@@ -40,9 +42,11 @@ exports.createFeServer = function () {
         }
     })
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
-        rollupConfig: {
-            external: ['vue'],
-            plugins: rollupPlugins
+        rollup: {
+            bundleConfig: {
+                external: ['vue'],
+                plugins: rollupPlugins
+            }
         },
         burnout_timeout,
         onGenerateUmdName: (buf, info) => {
