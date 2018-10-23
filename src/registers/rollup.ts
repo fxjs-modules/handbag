@@ -1,5 +1,7 @@
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 
+import moduleList = require('@fibjs/builtin-modules')
+
 export const SUFFIX = ['.ts', '.tsx']
 
 export function registerAsRollupedJavascript (vbox, options) {
@@ -16,7 +18,7 @@ export function registerAsRollupedJavascript (vbox, options) {
         compiler: (buf, info) => {
             const bundle = util.sync(rollup.rollup, true)({
                 input: info.filename,
-                external: ['coroutine'],
+                external: moduleList,
                 plugins: [
                     plugins['rollup-plugin-fibjs-resolve'](),
                     require('rollup-plugin-commonjs')()
