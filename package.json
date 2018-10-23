@@ -24,18 +24,18 @@
   },
   "homepage": "https://github.com/fxjs-modules/handbag#readme",
   "dependencies": {
+    "@babel/standalone": "^7.1.0",
     "@fibjs/builtin-modules": "^0.1.0",
-    "babel-standalone": "^6.26.0"
+    "fib-pug": "0.0.3",
+    "fib-rollup": "^0.2.1",
+    "fib-typify": "^0.3.1",
+    "stylus": "^0.54.5"
   },
   "devDependencies": {
-    "@babel/standalone": "^7.1.0",
     "@fibjs/ci": "^2.1.0",
     "@fibjs/detect-port": "^1.0.2",
     "@types/fibjs": "^0.26.5",
     "cheerio": "^1.0.0-rc.2",
-    "fib-pug": "0.0.3",
-    "fib-rollup": "^0.2.1",
-    "fib-typify": "^0.3.1",
     "jstransformer-stylus": "^1.5.0",
     "jstransformer-typescript": "^1.1.0",
     "riot": "^3.12.0",
