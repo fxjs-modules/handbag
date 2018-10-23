@@ -21,27 +21,7 @@ exports.createFeServer = function () {
 
     const rollupPlugins = [
         fibRollup.plugins['rollup-plugin-fibjs-resolve'](),
-        (function () {
-            return {
-                name: 'rollup-plugin-babel-standalone',
-                transform (code, id) {
-                    const transformed = babelStandalone.transform(code, {
-                        presets: [
-                            ['es2015', { "modules": false }],
-                            'es2016', 'es2017',
-                            /* ['stage-0'] */
-                        ],
-                    })
-
-                    // console.log('transformed', Object.keys(transformed))
-                    
-                    return {
-                        code: transformed.code,
-                        map: transformed.map
-                    }
-                }
-            }
-        })(),
+        fibRollup.plugins['rollup-plugin-babel-standalone'](),
         require('rollup-plugin-commonjs')(),
     ]
 
@@ -50,14 +30,20 @@ exports.createFeServer = function () {
         
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
         suffix: ['m.ts', '.mjs'],
-        rollupConfig: { plugins: rollupPlugins },
+        rollupConfig: {
+            external: ['vue'],
+            plugins: rollupPlugins
+        },
         burnout_timeout,
         onGenerateUmdName: (buf, info) => {
             return path.basename(info.filename.replace('.m.ts', ''))
         }
     })
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
-        rollupConfig: { plugins: rollupPlugins },
+        rollupConfig: {
+            external: ['vue'],
+            plugins: rollupPlugins
+        },
         burnout_timeout,
         onGenerateUmdName: (buf, info) => {
             return path.basename(info.filename).replace('.ts', '')

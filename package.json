@@ -34,7 +34,7 @@
     "@types/fibjs": "^0.26.5",
     "cheerio": "^1.0.0-rc.2",
     "fib-pug": "0.0.3",
-    "fib-rollup": "^0.1.0",
+    "fib-rollup": "^0.2.1",
     "fib-typify": "^0.3.1",
     "jstransformer-stylus": "^1.5.0",
     "jstransformer-typescript": "^1.1.0",
