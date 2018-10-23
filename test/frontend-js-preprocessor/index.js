@@ -91,4 +91,7 @@ if (process.env.FX_HANDBAG_FULLTEST) {
     })
 }
 
-require.main === module && test.run(console.DEBUG)
+if (require.main === module) {
+    test.run(console.DEBUG)
+    process.exit()
+}

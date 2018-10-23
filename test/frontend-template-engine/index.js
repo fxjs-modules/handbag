@@ -119,4 +119,7 @@ describe('register: riot', () => {
     })
 })
 
-require.main === module && test.run(console.DEBUG)
+if (require.main === module) {
+    test.run(console.DEBUG)
+    process.exit()
+}
