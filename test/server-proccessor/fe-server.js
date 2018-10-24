@@ -4,13 +4,11 @@ const http = require('http')
 const mq = require('mq')
 
 const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-hash')()
+const moduleList = Object.keys(moduleHash)
 const detectPort = require('@fibjs/detect-port')
 const fxHandbag = require('../../')
 
 const fibRollup = require('fib-rollup')
-
-const babelStandalone = require('@babel/standalone')
-// const babelStandalone = require('@babel/standalone/babel.min.js')
 
 exports.createFeServer = function () {
     const clientVBox = new vm.SandBox(moduleHash)
@@ -18,6 +16,21 @@ exports.createFeServer = function () {
     const burnout_timeout = 400
     fxHandbag.registers.pug.registerPugAsRenderer(clientVBox, {burnout_timeout})
     fxHandbag.registers.stylus.registerStylusAsCss(clientVBox, {burnout_timeout})
+    fxHandbag.registers.vue.registerVueAsRollupedJavascript(clientVBox, {
+        burnout_timeout,
+        rollup: {
+            onGenerateUmdName (buf, info) {
+                const relPath = path.relative(__dirname, info.filename)
+                const widgetName = relPath.replace('.vue', '')
+                return widgetName
+            },
+            writeConfig: {
+                output: {
+                    format: 'umd'
+                }
+            }
+        }
+    })
 
     const rollupPlugins = [
         fibRollup.plugins['rollup-plugin-fibjs-resolve'](),
@@ -31,31 +44,32 @@ exports.createFeServer = function () {
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
         suffix: ['m.ts', '.mjs'],
         rollup: {
+            onGenerateUmdName: (buf, info) => {
+                return path.basename(info.filename.replace('.m.ts', ''))
+            },
             bundleConfig: {
-                external: ['vue'],
+                external: moduleList,
                 plugins: rollupPlugins
             }
         },
         burnout_timeout,
-        onGenerateUmdName: (buf, info) => {
-            return path.basename(info.filename.replace('.m.ts', ''))
-        }
+        
     })
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
         rollup: {
+            onGenerateUmdName: (buf, info) => {
+                return path.basename(info.filename).replace('.ts', '')
+            },
             bundleConfig: {
-                external: ['vue'],
+                external: moduleList,
                 plugins: rollupPlugins
             }
         },
-        burnout_timeout,
-        onGenerateUmdName: (buf, info) => {
-            return path.basename(info.filename).replace('.ts', '')
-        }
+        burnout_timeout
     })
 
     const routes = {
-        '(.*).html': (req, filepath) => {
+        '(.*)\.html': (req, filepath) => {
             filepath = path.join(__dirname, './root', './', filepath).replace(__dirname, '.')
 
             const renderer = clientVBox.require(filepath, __dirname)
@@ -63,7 +77,7 @@ exports.createFeServer = function () {
             req.response.setHeader({'Content-Type': 'text/html; charset=utf8'})
             req.response.write(renderer())
         },
-        '(.*).css': (req, filepath) => {
+        '(.*)\.css': (req, filepath) => {
             filepath = path.join(__dirname, './root', './', filepath).replace(__dirname, '.')
 
             const css = clientVBox.require(filepath, __dirname)
@@ -71,7 +85,15 @@ exports.createFeServer = function () {
             req.response.setHeader({'Content-Type': 'text/css; charset=utf8'})
             req.response.write(css)
         },
-        '(.*).js': (req, filepath) => {
+        '(.*)\.js': (req, filepath) => {
+            filepath = path.join(__dirname, './root', './', filepath).replace(__dirname, '.')
+
+            const js = clientVBox.require(filepath, __dirname)
+
+            req.response.setHeader({'Content-Type': 'application/javascript; charset=utf8'})
+            req.response.write(js)
+        },
+        '(.*)\.vue': (req, filepath) => {
             filepath = path.join(__dirname, './root', './', filepath).replace(__dirname, '.')
 
             const js = clientVBox.require(filepath, __dirname)

@@ -75,7 +75,7 @@ set one `compiler` function for `vbox`, the `compiler` is used for [`vbox.setMod
 interface SetVboxOptions {
     suffix: string|string[],
     compiler: Function,
-    compile_to_script?: boolean
+    compile_to_iife_script?: boolean
 }
 ```
 
@@ -133,11 +133,12 @@ register compiler to require typescript file as plain javascript string.
 `rollup.registerTypescriptAsRollupedJavascript(vbox, options)`
 ---
 - options.suffix: default `['.ts', '.tsx']`
-- options.rollupConfig: default `{}`, config passed to 
+- options.rollup.bundleConfig: default `{}`, config passed to 
     - `const bundle = rollup.rollup({...})`
+- options.rollup.writeConfig: default `{}`, config passed to 
     - `bundle.write({...})`
     - `bundle.generate({...})`
-- options.onGenerateUmdName: default `(buf, info) => 's'`. name for rollup's `umd`/`iife` mode
+- options.rollup.onGenerateUmdName: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
 
 register compiler to require typescript file as **rolluped** plain javascript string
 

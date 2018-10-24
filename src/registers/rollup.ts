@@ -1,6 +1,7 @@
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 
 import moduleList = require('@fibjs/builtin-modules')
+import { getRollupOptions } from './_utils';
 
 export const SUFFIX = ['.ts', '.tsx']
 
@@ -8,15 +9,11 @@ export function registerAsRollupedJavascript (vbox, options) {
     const util = require('util')
     const { default: rollup, plugins } = require('fib-rollup');
 
-    const { compilerOptions = null, burnout_timeout = 0,
-        rollup: rollupConfig = {},
-        onGenerateUmdName = (buf, info) => 'UmdModule'
+    const {
+        compilerOptions = null, burnout_timeout = 0
     } = options || {}
 
-    const {
-        bundleConfig = {},
-        outputConfig = {}
-    } = rollupConfig || {}
+    const rollupConfig = getRollupOptions(options)
 
     setCompilerForVbox(vbox, {
         suffix: SUFFIX,
@@ -26,22 +23,23 @@ export function registerAsRollupedJavascript (vbox, options) {
                 external: moduleList,
                 plugins: [
                     plugins['rollup-plugin-fibjs-resolve'](),
-                    require('rollup-plugin-commonjs')()
+                    require('rollup-plugin-commonjs')(),
                 ],
-                ...bundleConfig
+                ...rollupConfig.bundleConfig
             })
 
             const { code: rollupedJs } = util.sync(bundle.generate, true)({
+                ...rollupConfig.writeConfig,
                 output: {
-                    name: onGenerateUmdName(buf, info),
                     format: 'umd',
+                    name: rollupConfig.onGenerateUmdName(buf, info),
+                    ...rollupConfig.writeConfig.output
                 },
-                ...outputConfig,
             })
 
             return wrapAsString(rollupedJs)
         },
         burnout_timeout,
-        compile_to_script: false
+        compile_to_iife_script: false
     })
 }

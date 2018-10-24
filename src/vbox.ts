@@ -3,7 +3,7 @@ import coroutine = require('coroutine')
 interface SetVboxOptions {
     suffix: string|string[],
     compiler: Function,
-    compile_to_script?: boolean
+    compile_to_iife_script?: boolean
 }
 
 interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
@@ -12,7 +12,7 @@ interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
     const timeouts = {}
 
-    const { suffix, compiler, timeout: _timeout = 1000, compile_to_script = false } = options;
+    const { suffix, compiler, timeout: _timeout = 1000, compile_to_iife_script = false } = options;
     let { __burnout_timeout = 0 } = vbox as any || {}
     if (!Number.isInteger(__burnout_timeout))
         __burnout_timeout = 0
@@ -40,7 +40,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
             }, __burnout_timeout)
         }
 
-        if (compile_to_script) {
+        if (compile_to_iife_script) {
             return compiledContent
         }
         return `module.exports = ${compiledContent}`

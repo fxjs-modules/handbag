@@ -16,7 +16,7 @@ function _register (asPlain = false) {
                     : (buf, info) => fTypify.compileRaw(buf + '', compilerOptions)
                     ,
             burnout_timeout,
-            compile_to_script: !asPlain
+            compile_to_iife_script: !asPlain
         })
     }
     

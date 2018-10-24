@@ -8,6 +8,8 @@ run('./frontend-template-engine')
 run('./frontend-css-preprocessor')
 run('./frontend-js-preprocessor')
 
+run('./frontend-mvvm-framework')
+
 run('./server-proccessor')
 
 if (require.main === module) {
