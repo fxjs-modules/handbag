@@ -133,12 +133,7 @@ register compiler to require typescript file as plain javascript string.
 `rollup.registerTypescriptAsRollupedJavascript(vbox, options)`
 ---
 - options.suffix: default `['.ts', '.tsx']`
-- options.rollup.bundleConfig: default `{}`, config passed to 
-    - `const bundle = rollup.rollup({...})`
-- options.rollup.writeConfig: default `{}`, config passed to 
-    - `bundle.write({...})`
-    - `bundle.generate({...})`
-- options.rollup.onGenerateUmdName: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
+- options.rollup
 
 register compiler to require typescript file as **rolluped** plain javascript string
 
@@ -146,17 +141,38 @@ register compiler to require typescript file as **rolluped** plain javascript st
 - [fib-rollup]
 - [rollup-plugin-commonjs]
 
+`vue.registerVueAsRollupedJavascript(vbox, options)`
+---
+- options.suffix: default `['.vue']`
+- options.rollup
+- options.rollupPluginVueOptions: default `{}`, options passwd to [rollup-plugin-vue]
+
+register compiler to require typescript file as **rolluped** plain javascript string
+
+**require**
+- [fib-rollup]
+- [rollup-plugin-commonjs]
+- [rollup-plugin-vue]
+
 `image.registerImageAsBase64(vbox, options)`
 ---
 - options.suffix: default `['.png', '.jpg', '.jpeg', '.gif', '.bmp']`
 
 register compiler to require image file as base64 string
 
-
-
 ## Others
 
-### burnout_timeout
+### `registerOptions.rollup`
+There's register based on rollup, its registerOptions has those options:
+
+- options.rollup.bundleConfig: default `{}`, config passed to 
+    - `const bundle = rollup.rollup({...})`
+- options.rollup.writeConfig: default `{}`, config passed to 
+    - `bundle.write({...})`
+    - `bundle.generate({...})`
+- options.rollup.onGenerateUmdName: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
+
+### `registerOptions.burnout_timeout`
 
 In some cases, we want vbox to remove required module by ID after `burnout_timeout`.
 
@@ -174,3 +190,4 @@ Copyright (c) 2018-present, Richard
 
 [fib-rollup]:https://www.npmjs.com/package/fib-rollup
 [rollup-plugin-commonjs]:https://www.npmjs.com/package/rollup-plugin-commonjs
+[rollup-plugin-vue]:https://www.npmjs.com/package/rollup-plugin-vue
