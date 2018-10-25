@@ -1,6 +1,6 @@
 {
   "name": "@fxjs/handbag",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "require resources directly 👝",
   "main": "./lib/index.js",
   "scripts": {

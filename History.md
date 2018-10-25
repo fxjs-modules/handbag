@@ -1,7 +1,16 @@
 
-v0.0.3 / 2018-10-23
+v0.1.0 / 2018-10-25
 ==================
 
+  * [README.md] add API about vue register.
+  * [breakchange]     - rename registerOption's `compile_to_script` to `compile_to_iife_script`;     - move `registerOption.onGenerateUmdName` -> `registerOption.rollup.onGenerateUmdName`     - separate `registerOption.rollup` ->         - `registerOption.rollup.bundleConfig`         - `registerOption.rollup.outputConfig` [new register]     - vue
+  * [breakchange] register:`rollup.registerAsRollupedJavascript`'s option rollup -> bundleConfig, outputConfig
+  * little robust change.
+
+v0.0.3 / 2018-10-23
+===================
+
+  * Release v0.0.3
   * safer 'wrapAsString'
 
 v0.0.2 / 2018-10-23
