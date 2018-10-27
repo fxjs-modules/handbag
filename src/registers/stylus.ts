@@ -1,3 +1,5 @@
+import fs = require('fs')
+import path = require('path')
 import util = require('util')
 
 import stylus = require('stylus')
@@ -10,16 +12,53 @@ export function registerStylusAsPlain (vbox, options) {
     return registerAsPlain(vbox, {suffix: SUFFIX, ...options})
 }
 
+function findNodeModulesRecursively (startPoint = '') {
+    if (startPoint === '/')
+        return 
+    
+    const absPath = path.resolve(startPoint)
+    const testPath = path.join(absPath, 'node_modules')
+
+    if (!fs.exists(testPath) || !fs.stat(testPath).isDirectory())
+        return findNodeModulesRecursively(path.dirname(absPath))
+    else
+        return testPath
+}
+
 export function registerStylusAsCss (vbox, options) {
     const { compilerOptions = {}, burnout_timeout = 0 } = options || {}
+    compilerOptions.paths = util.isArray(compilerOptions.paths) ? compilerOptions.paths : []
 
-    const renderSync = util.sync(stylus.render)
-    
     setCompilerForVbox(vbox, {
         suffix: SUFFIX,
-        compiler: (buf, info) => wrapAsString(
-            renderSync(buf + '', compilerOptions)
-        ),
+        compiler: (buf, info) => {
+            const stylusString = buf + ''
+            const paths = [
+                ...compilerOptions.paths,
+                path.dirname(info.filename),
+            ]
+
+            const nmPath = findNodeModulesRecursively(process.cwd())
+            if (nmPath)
+                paths.push(nmPath)
+
+            const renderAsync = async () => {
+                return new Promise(function (resolve, reject) {
+                    stylus(stylusString)
+                        .set('filename', info.filename)
+                        .set('paths', paths)
+                        .render(function (err, css) {
+                            if (err)
+                                reject(err)
+
+                            resolve(css)
+                        })
+                })
+            }
+
+            const renderSync = util.sync(renderAsync, true)
+            return wrapAsString(renderSync())
+        },
         burnout_timeout
     })
 }

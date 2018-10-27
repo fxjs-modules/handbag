@@ -35,7 +35,11 @@ describe('register: stylus', () => {
 
         const plainText = vbox.require('./test.styl', __dirname)
 
-        stylus.render(plainText, {}, (err, result) => {
+        stylus.render(plainText, {
+            paths: [
+                __dirname
+            ]
+        }, (err, result) => {
             assert.isNull(err)
             renderedCssList.push(result)
         })
@@ -52,32 +56,10 @@ describe('register: stylus', () => {
 
     it('registerStylusAsCss', () => {
         vbox = new vm.SandBox(moduleHash)
-        function registerStylusAsCss (vbox) {
-            const compilerOptions = {}
 
-            const renderSync = util.sync(stylus.render)
-            
-            fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
-                suffix: ['.styl', '.stylus'],
-                compiler: (buf, info) => fxHandbag.vboxUtils.wrapAsString(
-                    renderSync(buf + '', compilerOptions)
-                )
-            })
-        }
-
-        registerStylusAsCss(vbox)
-
-        const result = vbox.require('./test.styl', __dirname)
-
-        renderedCssList.push(result)
-
-        const vbox2 = new vm.SandBox(moduleHash)
-
-        fxHandbag.registers.stylus.registerStylusAsCss(vbox2)
-
-        assert.equal(
-            vbox.require('./test.styl', __dirname),
-            vbox2.require('./test.styl', __dirname)
+        fxHandbag.registers.stylus.registerStylusAsCss(vbox)
+        renderedCssList.push(
+            vbox.require('./test.styl', __dirname)
         )
     })
 
