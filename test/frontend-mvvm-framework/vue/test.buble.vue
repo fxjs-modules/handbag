@@ -17,7 +17,7 @@ export default {
   },
 
   methods: {
-    async loadResource () {
+    loadResource () {
       return new Promise(function (resolve, reject) {
         setTimeout(() => {
           resolve(Date.now())

@@ -11,7 +11,7 @@ const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-h
 describe('register: vue', () => {
     let vbox = null
 
-    it('registerVueAsRollupedJavascript', () => {
+    it('registerVueAsRollupedJavascript: default/babel mode', () => {
         vbox = new vm.SandBox(moduleHash)
         fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox)
 
@@ -20,6 +20,31 @@ describe('register: vue', () => {
 
         assert.isTrue(!rolledJs.includes('const '))
         assert.isTrue(!rolledJs.includes('async '))
+    })
+
+    it('registerVueAsRollupedJavascript: buble mode', () => {
+        vbox = new vm.SandBox(moduleHash)
+        fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
+            tranpileLib: 'buble'
+        })
+
+        let rolledJs = null
+        rolledJs = vbox.require('./vue/test.buble.vue', __dirname)
+
+        assert.isTrue(!rolledJs.includes('const '))
+    })
+
+    it('registerVueAsRollupedJavascript: no-transpile mode', () => {
+        vbox = new vm.SandBox(moduleHash)
+        fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
+            tranpileLib: false
+        })
+
+        let rolledJs = null
+        rolledJs = vbox.require('./vue/test.vue', __dirname)
+
+        assert.isTrue(rolledJs.includes('const '))
+        assert.isTrue(rolledJs.includes('async '))
     })
 })
 

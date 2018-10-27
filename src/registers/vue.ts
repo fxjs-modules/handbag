@@ -2,7 +2,7 @@ import fibRollup = require('fib-rollup')
 
 import { isProduction } from '../utils';
 import { setCompilerForVbox, wrapAsString } from '../../lib/vbox';
-import { getRollupOptions, createVirtualZipFS } from './_utils';
+import { getRollupOptions } from './_utils';
 
 import moduleList = require('@fibjs/builtin-modules')
 
@@ -17,7 +17,7 @@ export function registerVueAsRollupedJavascript (vbox, options) {
     const util = require('util')
     const { default: rollup } = require('fib-rollup');
 
-    const { rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS, bundleClient = true, ...restOpts } = options || {}
+    const { rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS, tranpileLib = 'babel', ...restOpts } = options || {}
 
     restOpts.suffix = restOpts.suffix || SUFFIX
 
@@ -27,7 +27,7 @@ export function registerVueAsRollupedJavascript (vbox, options) {
 
     const rollupConfig = getRollupOptions(options)
     rollupConfig.bundleConfig = rollupConfig.bundleConfig || {}
-    rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions)
+    rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, tranpileLib)
 
     if (isProduction())
         rollupConfig.bundleConfig.plugins.push(
@@ -74,16 +74,37 @@ function getRequireVBox () {
     })
 }
 
-export function getDefaultPlugins (rollupPluginVueOptions = {}) {
+export function getDefaultPlugins (rollupPluginVueOptions = {}, tranpileMode: '' | 'buble' | 'babel' = 'babel') {
     const rollupPluginRequireVbox = getRequireVBox()
 
     const rollupPluginVue = rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname).default
+    const useBuble = tranpileMode === 'buble'
+    const useBabel = tranpileMode === 'babel'
 
     const defaultPlugins = [
         rollupPluginVue(rollupPluginVueOptions),
         fibRollup.plugins['rollup-plugin-fibjs-resolve'](),
-        fibRollup.plugins['rollup-plugin-babel-standalone'](),
-        require('rollup-plugin-commonjs')()
+        ...useBabel ? [
+            fibRollup.plugins['rollup-plugin-babel-standalone']({
+                transformConfig: {
+                    presets: [
+                        ['es2015', { "modules": false }],
+                        'es2016', 'es2017',
+                    ]
+                }
+            })
+        ] : [],
+        require('rollup-plugin-typescript')({
+            lib: ["es5", "es6", "es7", "dom"],
+            target: "es5",
+            module: 'CommonJS',
+            typescript: require('typescript'),
+            tslib: require('tslib')
+        }),
+        ...useBuble ? [require('rollup-plugin-buble')()] : [],
+        require('rollup-plugin-commonjs')({
+            extensions: ['.js', '.ts']
+        })
     ]
 
     if (isProduction()) {

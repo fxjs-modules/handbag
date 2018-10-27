@@ -135,7 +135,10 @@ register compiler to require typescript file as plain javascript string.
 - options.suffix: default `['.ts', '.tsx']`
 - options.rollup
 
-register compiler to require typescript file as **rolluped** plain javascript string
+register compiler to require typescript file as **rolluped** plain javascript string.
+
+it would transpile compile vue component js to 'es5' by default. If `<script lang="ts">` set, 
+it always transpile component js with typescript
 
 **require**
 - [fib-rollup]
@@ -146,13 +149,24 @@ register compiler to require typescript file as **rolluped** plain javascript st
 - options.suffix: default `['.vue']`
 - options.rollup
 - options.rollupPluginVueOptions: default `{}`, options passwd to [rollup-plugin-vue]
+- options.tranpileLib: default `'babel'`
+    - any value equals to `false`: no transpile
+    - 'babel': transpile component with babel
+    - 'buble': transpile component with buble
 
 register compiler to require typescript file as **rolluped** plain javascript string
+
+**NOTICE** it's not recommend use `async/await` in vue component, if you do so, the transpiled vue component's size would be large.
 
 **require**
 - [fib-rollup]
 - [rollup-plugin-commonjs]
 - [rollup-plugin-vue]
+
+- [rollup-plugin-buble] (if use options.tranpileLib="buble")
+- [rollup-plugin-typescript] (if use lang="ts")
+     - `tslib`
+     - `typescript`
 
 `image.registerImageAsBase64(vbox, options)`
 ---
@@ -189,5 +203,6 @@ Copyright (c) 2018-present, Richard
 [`vbox.setModuleCompiler`]:http://fibjs.org/docs/manual/object/ifs/sandbox.md.html#setModuleCompiler
 
 [fib-rollup]:https://www.npmjs.com/package/fib-rollup
+[rollup-plugin-buble]:https://www.npmjs.com/package/rollup-plugin-buble
 [rollup-plugin-commonjs]:https://www.npmjs.com/package/rollup-plugin-commonjs
 [rollup-plugin-vue]:https://www.npmjs.com/package/rollup-plugin-vue
