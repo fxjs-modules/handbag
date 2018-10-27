@@ -1,7 +1,14 @@
 
-v0.1.0 / 2018-10-25
+v0.1.1 / 2018-10-28
 ==================
 
+  * [register:stylus] better render process.
+  * [register:vue] allow transpile with `buble`
+
+v0.1.0 / 2018-10-25
+===================
+
+  * Release v0.1.0
   * [README.md] add API about vue register.
   * [breakchange]     - rename registerOption's `compile_to_script` to `compile_to_iife_script`;     - move `registerOption.onGenerateUmdName` -> `registerOption.rollup.onGenerateUmdName`     - separate `registerOption.rollup` ->         - `registerOption.rollup.bundleConfig`         - `registerOption.rollup.outputConfig` [new register]     - vue
   * [breakchange] register:`rollup.registerAsRollupedJavascript`'s option rollup -> bundleConfig, outputConfig
