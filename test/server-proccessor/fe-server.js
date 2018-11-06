@@ -40,9 +40,15 @@ exports.createFeServer = function () {
 
     if (process.env.NODE_ENV === 'production')
         rollupPlugins.push(fibRollup.plugins['rollup-plugin-uglify-js']())
+
+    assert.throws(() => {
+        fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
+            suffix: ['m.ts'],
+        })
+    })
         
     fxHandbag.registers.rollup.registerAsRollupedJavascript(clientVBox, {
-        suffix: ['m.ts', '.mjs'],
+        suffix: ['.m.ts', '.mjs'],
         rollup: {
             onGenerateUmdName: (buf, info) => {
                 return path.basename(info.filename.replace('.m.ts', ''))

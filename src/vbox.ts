@@ -6,6 +6,10 @@ interface SetVboxOptions {
     compile_to_iife_script?: boolean
 }
 
+function isValidSuffx (suffix: string) {
+    return typeof suffix === 'string' && suffix && suffix[0] === '.'
+}   
+
 interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
     timeout?: number
 }
@@ -51,7 +55,12 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
     if (!Array.isArray(suffixArr))
         suffixArr = [suffixArr]
 
-    suffixArr.forEach(suffix => vbox.setModuleCompiler(suffix, compilerFn))
+    suffixArr.forEach(suffix => {
+        if(!isValidSuffx(suffix))
+            throw `isValidSuffx ${suffix}`
+            
+        vbox.setModuleCompiler(suffix, compilerFn)
+    })
 }
 
 interface SetCompilerForVboxOptions extends SetVboxOptions {

@@ -21,6 +21,7 @@ export function registerVueAsRollupedJavascript (vbox, options) {
         rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS,
         tranpileLib = undefined, /* for historical mistake */
         transpileLib = tranpileLib  || 'babel',
+        suffix = SUFFIX,
         ...restOpts
     } = options || {}
 
@@ -40,7 +41,7 @@ export function registerVueAsRollupedJavascript (vbox, options) {
         )
 
     setCompilerForVbox(vbox, {
-        suffix: SUFFIX,
+        suffix,
         compiler: (buf, info) => {
             // to hide real fs
             // const zipName = `./${Date.now()}.zip`

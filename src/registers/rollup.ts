@@ -16,13 +16,13 @@ export function _register(asPlainScript = true) {
         const { default: rollup, plugins } = require('fib-rollup');
 
         const {
-            compilerOptions = null, burnout_timeout = 0
+            compilerOptions = null, burnout_timeout = 0, suffix = SUFFIX
         } = options || {}
 
         const rollupConfig = getRollupOptions(options)
 
         setCompilerForVbox(vbox, {
-            suffix: SUFFIX,
+            suffix,
             compiler: (buf, info) => {
                 const bundle = util.sync(rollup.rollup, true)({
                     input: info.filename,
