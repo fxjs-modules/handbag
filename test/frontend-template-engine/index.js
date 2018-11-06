@@ -7,7 +7,11 @@ const fpug = require('fib-pug')
 const cheerio = require('cheerio')
 
 const vm = require('vm')
+const fs = require('fs')
+const path = require('path')
 const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-hash')()
+
+const __abs_test_root = path.resolve(__dirname, '../')
 
 describe('register: pug', () => {
     let vbox = null
@@ -38,59 +42,65 @@ describe('register: pug', () => {
         assert.equal(instance.find('#included-div > h2').length, 1)
     }
 
-    const compilerOptions = {
-        filters: {
-            typescript: require('jstransformer-typescript').render,
-            stylus: require('jstransformer-stylus').render,
-        }
+    function getCompilerOptions () {
+		return {
+			filters: {
+				typescript: require('jstransformer-typescript').render,
+				stylus: require('jstransformer-stylus').render,
+			},
+			basedir: __abs_test_root
+		}
+	}
+
+    function testPugAbsoluteResult (renderedHtml) {
+		assert.equal(cheerio(renderedHtml).find('#included-div').length, 1)
+		assert.equal(cheerio(renderedHtml).find('#abs-wrapper + #included-div').length, 1)
     }
 
     it('registerPugAsHtml', () => {
-        vbox = new vm.SandBox(moduleHash)
-        function registerPugAsHtml (vbox) {
-            fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
-                suffix: '.pug',
-                compiler: (buf, info) => JSON.stringify(
-                    fpug.renderFile(info.filename, compilerOptions)
-                )
-            })
-        }
-        registerPugAsHtml(vbox)
-        fxHandbag.registers.pug.hackGlobalForPugRuntime(vbox)
-
-        const renderedHtml = vbox.require('./test.pug', __dirname)
+		const _filename = path.resolve(__dirname, './test.pug')
+		const renderedHtml = fpug.renderFile(
+			_filename,
+			{
+				...getCompilerOptions(),
+				filename: _filename
+			}
+		)
         testRenderResult(renderedHtml)
-        
-        const vbox2 = new vm.SandBox(moduleHash)
-        fxHandbag.registers.pug.registerPugAsHtml(vbox2, { compilerOptions })
+
+        const vbox = new vm.SandBox(moduleHash)
+        fxHandbag.registers.pug.registerPugAsHtml(vbox, { compilerOptions: getCompilerOptions() })
         assert.equal(
-            vbox.require('./test.pug', __dirname),
-            vbox2.require('./test.pug', __dirname)
+            renderedHtml,
+            vbox.require('./test.pug', __dirname)
         )
+
+        const vbox2 = new vm.SandBox(moduleHash)
+        fxHandbag.registers.pug.registerPugAsHtml(vbox2, { compilerOptions: getCompilerOptions() })
+
+		testPugAbsoluteResult(vbox2.require('./test.abs.pug', __dirname))
     })
 
     it('registerPugAsRenderer', () => {
-        vbox = new vm.SandBox(moduleHash)
+		const _filename = path.resolve(__dirname, './test.pug')
+		const compilerOptions = getCompilerOptions()
+		compilerOptions.inlineRuntimeFunctions = Math.random(0, 1) > 0.5
+		compilerOptions.filename = _filename
 
-        function registerPugAsRenderer (vbox) {
-            fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
-                suffix: '.pug',
-                compiler: (buf, info) => fpug.compile(buf + '', {...compilerOptions, inlineRuntimeFunctions: Math.random(0, 1) > 0.5}),
-                timeout: 0
-            })
-        }
+		const renderedHtml = fpug.compile(fs.readTextFile(_filename), compilerOptions)(pugLocals)
+		testRenderResult(renderedHtml, pugLocals)
 
-        registerPugAsRenderer(vbox)
-
-        const renderer = vbox.require('./test.pug', __dirname)
-        testRenderResult(renderer(pugLocals), pugLocals)
+        const vbox = new vm.SandBox(moduleHash)
+        fxHandbag.registers.pug.registerPugAsRenderer(vbox, { compilerOptions: getCompilerOptions() })
+        assert.equal(
+            renderedHtml,
+            vbox.require('./test.pug', __dirname)(pugLocals)
+		)
 
         const vbox2 = new vm.SandBox(moduleHash)
-        fxHandbag.registers.pug.registerPugAsRenderer(vbox2, { compilerOptions })
-        assert.equal(
-            vbox.require('./test.pug', __dirname)(pugLocals),
-            vbox2.require('./test.pug', __dirname)(pugLocals)
-        )
+        fxHandbag.registers.pug.registerPugAsRenderer(vbox2, { compilerOptions: getCompilerOptions() })
+
+		testPugAbsoluteResult(vbox2.require('./test.abs.pug', __dirname)())
     })
 })
 
@@ -105,7 +115,7 @@ describe('register: riot', () => {
         function registerRiotAsJs (vbox) {
             const compilerOptions = {
             }
-            
+
             fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
                 suffix: '.tag',
                 compiler: (buf, info) => fxHandbag.vboxUtils.wrapAsString(

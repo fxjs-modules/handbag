@@ -6,13 +6,31 @@ import { setCompilerForVbox, wrapAsString } from '../vbox'
 
 export const SUFFIX = ['.pug', '.jade']
 
+function prettyCompilerOptions (compilerOptions) {
+	compilerOptions.basedir = compilerOptions.basedir || process.cwd()
+
+    compilerOptions.inlineRuntimeFunctions = !!compilerOptions.inlineRuntimeFunctions
+
+    return compilerOptions
+}
+
+function assignFilenameOption (compilerOptions, filename) {
+	compilerOptions.filename = compilerOptions.filename || filename
+}
+
 export function registerPugAsHtml (vbox, options) {
     const { compilerOptions = {}, burnout_timeout = 0, suffix = SUFFIX } = options || {}
+    prettyCompilerOptions(compilerOptions)
+
     setCompilerForVbox(vbox, {
         suffix,
-        compiler: (buf, info) => wrapAsString(
-            fpug.compile(buf + '', compilerOptions)()
-        ),
+        compiler: (buf, info) => {
+			assignFilenameOption(compilerOptions, info.filename)
+
+			return wrapAsString(
+				fpug.compile(buf + '', compilerOptions)()
+			)
+		},
         burnout_timeout
     })
 }
@@ -23,18 +41,15 @@ export function hackGlobalForPugRuntime (vbox) {
 
 export function registerPugAsRenderer (vbox, options) {
     const { compilerOptions = {}, burnout_timeout = 0, suffix = SUFFIX } = options || {}
-    
-    if (compilerOptions.inlineRuntimeFunctions === undefined) {
-        compilerOptions.inlineRuntimeFunctions = false
-    }
-    compilerOptions.inlineRuntimeFunctions = !!compilerOptions.inlineRuntimeFunctions
+    prettyCompilerOptions(compilerOptions)
 
     hackGlobalForPugRuntime(vbox)
     vbox.run(path.resolve(__dirname, './global_hack/pug.js'))
     setCompilerForVbox(vbox, {
         suffix,
         compiler: (buf, info) => {
-            compilerOptions.filename = info.filename
+			assignFilenameOption(compilerOptions, info.filename)
+
             return fpug.compile(buf + '', compilerOptions)
         },
         burnout_timeout
