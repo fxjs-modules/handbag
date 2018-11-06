@@ -130,15 +130,23 @@ register compiler to require typescript file as one valid module
 
 register compiler to require typescript file as plain javascript string.
 
-`rollup.registerTypescriptAsRollupedJavascript(vbox, options)`
+`rollup.registerAsModule(vbox, options)`
+---
+- options.suffix: default `['.ts', '.tsx']`
+- options.rollup
+
+register compiler to require typescript file as module.
+
+**require**
+- [fib-rollup]
+- [rollup-plugin-commonjs]
+
+`rollup.registerAsPlainJavascript(vbox, options)`
 ---
 - options.suffix: default `['.ts', '.tsx']`
 - options.rollup
 
 register compiler to require typescript file as **rolluped** plain javascript string.
-
-it would transpile compile vue component js to 'es5' by default. If `<script lang="ts">` set, 
-it always transpile component js with typescript
 
 **require**
 - [fib-rollup]
@@ -157,6 +165,9 @@ it always transpile component js with typescript
 register compiler to require typescript file as **rolluped** plain javascript string
 
 **NOTICE** it's not recommend use `async/await` in vue component, if you do so, the transpiled vue component's size would be large.
+
+it would compile vue component js to 'es5' by default. If `<script lang="ts">` set, 
+it always transpile component js with typescript
 
 **require**
 - [fib-rollup]

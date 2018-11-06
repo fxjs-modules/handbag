@@ -73,10 +73,10 @@ describe('register: typescript', () => {
 
 if (process.env.FX_HANDBAG_FULLTEST) {
     describe('register: rollup', () => {
-        it('registerAsRollupedJavascript', () => {
+        it('registerAsPlainJavascript(registerAsRollupedJavascript)', () => {
             vbox = new vm.SandBox(moduleHash)
 
-            fxHandbag.registers.rollup.registerAsRollupedJavascript(vbox)
+            fxHandbag.registers.rollup.registerAsPlainJavascript(vbox)
 
             const result = vbox.require('./test.ts', __dirname)
 
@@ -86,6 +86,17 @@ if (process.env.FX_HANDBAG_FULLTEST) {
 
             // test its cjs only
             const module = vbox2.require(tpath, __dirname)
+            testCjsModule(module)
+        })
+
+        it('registerAsModule', () => {
+            vbox = new vm.SandBox(moduleHash)
+
+            fxHandbag.registers.rollup.registerAsModule(vbox)
+
+            const module = vbox.require('./test.ts', __dirname)
+            console.log('module', module)
+
             testCjsModule(module)
         })
     })
