@@ -1,7 +1,15 @@
 
-v0.1.1 / 2018-10-28
+v0.1.2 / 2018-11-06
 ==================
 
+  * code clean.
+  * fix vue.registerVueAsRollupedJavascript's option key 'tranpileLib' to 'transpileLib'
+  * add registers.rollup.registerAsModule, fix README.md
+
+v0.1.1 / 2018-10-28
+===================
+
+  * Release v0.1.1
   * [register:stylus] better render process.
   * [register:vue] allow transpile with `buble`
 
