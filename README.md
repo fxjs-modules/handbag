@@ -157,7 +157,7 @@ register compiler to require typescript file as **rolluped** plain javascript st
 - options.suffix: default `['.vue']`
 - options.rollup
 - options.rollupPluginVueOptions: default `{}`, options passwd to [rollup-plugin-vue]
-- options.tranpileLib: default `'babel'`
+- options.transpileLib: default `'babel'`
     - any value equals to `false`: no transpile
     - 'babel': transpile component with babel
     - 'buble': transpile component with buble
@@ -174,7 +174,7 @@ it always transpile component js with typescript
 - [rollup-plugin-commonjs]
 - [rollup-plugin-vue]
 
-- [rollup-plugin-buble] (if use options.tranpileLib="buble")
+- [rollup-plugin-buble] (if use options.transpileLib="buble")
 - [rollup-plugin-typescript] (if use lang="ts")
      - `tslib`
      - `typescript`

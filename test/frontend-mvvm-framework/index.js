@@ -25,7 +25,7 @@ describe('register: vue', () => {
     it('registerVueAsRollupedJavascript: buble mode', () => {
         vbox = new vm.SandBox(moduleHash)
         fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
-            tranpileLib: 'buble'
+            transpileLib: 'buble'
         })
 
         let rolledJs = null
@@ -37,7 +37,7 @@ describe('register: vue', () => {
     it('registerVueAsRollupedJavascript: no-transpile mode', () => {
         vbox = new vm.SandBox(moduleHash)
         fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
-            tranpileLib: false
+            transpileLib: false
         })
 
         let rolledJs = null

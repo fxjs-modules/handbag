@@ -17,7 +17,12 @@ export function registerVueAsRollupedJavascript (vbox, options) {
     const util = require('util')
     const { default: rollup } = require('fib-rollup');
 
-    const { rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS, tranpileLib = 'babel', ...restOpts } = options || {}
+    const {
+        rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS,
+        tranpileLib = undefined, /* for historical mistake */
+        transpileLib = tranpileLib  || 'babel',
+        ...restOpts
+    } = options || {}
 
     restOpts.suffix = restOpts.suffix || SUFFIX
 
@@ -27,7 +32,7 @@ export function registerVueAsRollupedJavascript (vbox, options) {
 
     const rollupConfig = getRollupOptions(options)
     rollupConfig.bundleConfig = rollupConfig.bundleConfig || {}
-    rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, tranpileLib)
+    rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, transpileLib)
 
     if (isProduction())
         rollupConfig.bundleConfig.plugins.push(
