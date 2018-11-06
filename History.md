@@ -1,7 +1,13 @@
 
-v0.1.2 / 2018-11-06
+v0.1.3 / 2018-11-06
 ==================
 
+  * fix lack of support to 'options.suffx' for some compilers.
+
+v0.1.2 / 2018-11-06
+===================
+
+  * Release v0.1.2
   * code clean.
   * fix vue.registerVueAsRollupedJavascript's option key 'tranpileLib' to 'transpileLib'
   * add registers.rollup.registerAsModule, fix README.md
