@@ -95,7 +95,6 @@ if (process.env.FX_HANDBAG_FULLTEST) {
             fxHandbag.registers.rollup.registerAsModule(vbox)
 
             const module = vbox.require('./test.ts', __dirname)
-            console.log('module', module)
 
             testCjsModule(module)
         })
