@@ -166,7 +166,7 @@ register compiler to require typescript file as **rolluped** plain javascript st
 
 **NOTICE** it's not recommend use `async/await` in vue component, if you do so, the transpiled vue component's size would be large.
 
-it would compile vue component js to 'es5' by default. If `<script lang="ts">` set, 
+it would compile vue component js to 'es5' by default. If `<script lang="ts">` set,
 it always transpile component js with typescript
 
 **require**
@@ -185,14 +185,46 @@ it always transpile component js with typescript
 
 register compiler to require image file as base64 string
 
-## Others
+## common options
+
+### `registerOptions.compilerOptions`
+
+options passed to register's compiler/transpilor/renderer, view details in specified register
+
+### `registerOptions.hooks`
+
+there's one `EventEmitter` object in `registerOptions.emitter`, all `key` in `registerOptions.hooks` would be registered as emitter's event_name with handler from `registerOptions.hooks[key]`, e.g:
+
+```javascript
+{
+	...
+	hooks: {
+		before_transpile: (payload) => {
+			// print required file's information
+			console.log(payload.info)
+		},
+		generated: (payload) => {
+			// change content from every file required by this Sandbox to 'always online'
+			payload.result = 'always online'
+		}
+	}
+	...
+}
+```
+
+**supported hooks**
+- `before_transpile`
+	- `payload.raw`: original content's buffer
+	- `payload.info`: file information
+- `generated`: payload: {result}
+	- `payload.result`: transpiled content
 
 ### `registerOptions.rollup`
 There's register based on rollup, its registerOptions has those options:
 
-- options.rollup.bundleConfig: default `{}`, config passed to 
+- options.rollup.bundleConfig: default `{}`, config passed to
     - `const bundle = rollup.rollup({...})`
-- options.rollup.writeConfig: default `{}`, config passed to 
+- options.rollup.writeConfig: default `{}`, config passed to
     - `bundle.write({...})`
     - `bundle.generate({...})`
 - options.rollup.onGenerateUmdName: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
