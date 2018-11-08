@@ -3,8 +3,6 @@ test.setup()
 
 const fxHandbag = require('../../')
 
-const cheerio = require('cheerio')
-
 const vm = require('vm')
 const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-hash')()
 
@@ -45,6 +43,19 @@ describe('register: vue', () => {
 
         assert.isTrue(rolledJs.includes('const '))
         assert.isTrue(rolledJs.includes('async '))
+    })
+
+    it('require vue as componentOptions', () => {
+        vbox = new vm.SandBox(moduleHash)
+        fxHandbag.registers.vue.registerVueAsComponentOptions(vbox, {
+        })
+
+        coptions1 = vbox.require('./vue/test.vue', __dirname)
+
+        coptions2 = vbox.require('./vue/index.js', __dirname)
+
+        // equivalent in memory
+        assert.equal(coptions1, coptions2)
     })
 })
 

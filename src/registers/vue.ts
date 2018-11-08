@@ -1,8 +1,9 @@
 import fibRollup = require('fib-rollup')
 
+import { parseCommonOptions, makeHookPayload } from './_utils'
 import { isProduction } from '../utils';
-import { setCompilerForVbox, wrapAsString } from '../../lib/vbox';
-import { getRollupOptions } from './_utils';
+import { setCompilerForVbox, wrapAsString } from '../vbox';
+import { getRollupOptionsFromRegisterOptions } from './_utils';
 
 import moduleList = require('@fibjs/builtin-modules')
 
@@ -13,64 +14,64 @@ const DEFAULT_ROLLUP_PLUGIN_VUE_OPTS = {
         isProduction: true
     }
 }
-export function registerVueAsRollupedJavascript (vbox, options) {
-    const util = require('util')
-    const { default: rollup } = require('fib-rollup');
 
-    const {
-        rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS,
-        tranpileLib = undefined, /* for historical mistake */
-        transpileLib = tranpileLib  || 'babel',
-        suffix = SUFFIX,
-        ...restOpts
-    } = options || {}
+function _register (asModule) {
+    const default_transpileLib = asModule === true ? false : 'babel'
+    
+    return function (vbox, options) {
+        const util = require('util')
+        const { default: rollup } = require('fib-rollup');
 
-    restOpts.suffix = restOpts.suffix || SUFFIX
+        const {
+            burnout_timeout = 0,
+            suffix = SUFFIX,
+            emitter = null
+        } = parseCommonOptions(options) || {}
 
-    const {
-        compilerOptions = null, burnout_timeout = 0
-    } = options || {}
+        const {
+            rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS,
+            tranpileLib = undefined, /* for historical mistake */
+            transpileLib = tranpileLib || default_transpileLib,
+        } = options || {}
 
-    const rollupConfig = getRollupOptions(options)
-    rollupConfig.bundleConfig = rollupConfig.bundleConfig || {}
-    rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, transpileLib)
+        const rollupConfig = getRollupOptionsFromRegisterOptions(options)
+        rollupConfig.bundleConfig = rollupConfig.bundleConfig || {}
+        rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, transpileLib)
 
-    if (isProduction())
-        rollupConfig.bundleConfig.plugins.push(
-            fibRollup.plugins['rollup-plugin-uglify-js']()
-        )
+        if (isProduction())
+            rollupConfig.bundleConfig.plugins.push(
+                fibRollup.plugins['rollup-plugin-uglify-js']()
+            )
 
-    setCompilerForVbox(vbox, {
-        suffix,
-        compiler: (buf, info) => {
-            // to hide real fs
-            // const zipName = `./${Date.now()}.zip`
-            // const vFSPath = require('path').basename(info.filename)
-            // const zipNameToRequire = require('path').join(`${zipName}$`, vFSPath)
-            // const clearTempZipFS = createVirtualZipFS(zipName, vFSPath, buf + '')
-            // clearTempZipFS()
+        setCompilerForVbox(vbox, {
+            suffix,
+            compiler: (buf, info) => {
+                const bundle = util.sync(rollup.rollup, true)({
+                    input: info.filename,
+                    external: moduleList,
+                    ...rollupConfig.bundleConfig
+                })
 
-            const bundle = util.sync(rollup.rollup, true)({
-                input: info.filename,
-                external: moduleList,
-                ...rollupConfig.bundleConfig
-            })
+                const { code: rollupedJs } = util.sync(bundle.generate, true)({
+                    ...rollupConfig.writeConfig,
+                    output: {
+                        format: 'umd',
+                        name: rollupConfig.onGenerateUmdName(buf, info),
+                        ...rollupConfig.writeConfig.output
+                    }
+                })
 
-            const { code: rollupedJs } = util.sync(bundle.generate, true)({
-                ...rollupConfig.writeConfig,
-                output: {
-                    format: 'umd',
-                    name: rollupConfig.onGenerateUmdName(buf, info),
-                    ...rollupConfig.writeConfig.output
-                }
-            })
-
-            return wrapAsString(rollupedJs)
-        },
-        burnout_timeout,
-        compile_to_iife_script: false
-    })
+                return !asModule ? wrapAsString(rollupedJs) : rollupedJs
+            },
+            burnout_timeout,
+            compile_to_iife_script: asModule,
+            emitter
+        })
+    }
 }
+
+export const registerVueAsRollupedJavascript = _register(false)
+export const registerVueAsComponentOptions = _register(true)
 
 function getRequireVBox () {
     return fibRollup.getCustomizedVBox({
@@ -80,10 +81,13 @@ function getRequireVBox () {
     })
 }
 
-export function getDefaultPlugins (rollupPluginVueOptions = {}, tranpileMode: '' | 'buble' | 'babel' = 'babel') {
+export function getRollupPluginVue () {
     const rollupPluginRequireVbox = getRequireVBox()
+    return rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname).default
+}
 
-    const rollupPluginVue = rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname).default
+export function getDefaultPlugins (rollupPluginVueOptions = {}, tranpileMode: '' | 'buble' | 'babel' = 'babel') {
+    const rollupPluginVue = getRollupPluginVue()
     const useBuble = tranpileMode === 'buble'
     const useBabel = tranpileMode === 'babel'
 

@@ -34,6 +34,7 @@
   "devDependencies": {
     "@fibjs/ci": "^2.1.0",
     "@fibjs/detect-port": "^1.0.2",
+    "@fibjs/fs-readdir-recursive": "^1.0.2",
     "@types/fibjs": "^0.26.5",
     "cheerio": "^1.0.0-rc.2",
     "jstransformer-stylus": "^1.5.0",

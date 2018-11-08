@@ -1,6 +1,7 @@
 import fTypify = require('fib-typify')
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
+import { parseCommonOptions } from './_utils';
 
 export const SUFFIX = ['.ts', '.tsx']
 
@@ -9,8 +10,10 @@ function _register (asPlainJavascript) {
         const {
             compilerOptions = fTypify.defaultCompilerOptions,
             burnout_timeout = 0,
-            suffix = SUFFIX
-        } = options || {}
+            suffix = SUFFIX,
+            emitter = null
+        } = parseCommonOptions(options) || {}
+
         let compiler = null
 
         switch (asPlainJavascript) {
@@ -28,7 +31,8 @@ function _register (asPlainJavascript) {
             suffix,
             compiler,
             burnout_timeout,
-            compile_to_iife_script: !asPlainJavascript
+            compile_to_iife_script: !asPlainJavascript,
+            emitter
         })
     }
     

@@ -1,7 +1,7 @@
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 
 import moduleList = require('@fibjs/builtin-modules')
-import { getRollupOptions } from './_utils';
+import { getRollupOptionsFromRegisterOptions } from './_utils';
 
 export const SUFFIX = ['.ts', '.tsx']
 
@@ -19,7 +19,7 @@ export function _register(asPlainScript = true) {
             compilerOptions = null, burnout_timeout = 0, suffix = SUFFIX
         } = options || {}
 
-        const rollupConfig = getRollupOptions(options)
+        const rollupConfig = getRollupOptionsFromRegisterOptions(options)
 
         setCompilerForVbox(vbox, {
             suffix,

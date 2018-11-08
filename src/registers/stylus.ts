@@ -6,6 +6,7 @@ import stylus = require('stylus')
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 import { registerAsPlain } from './plain'
+import { parseCommonOptions } from './_utils';
 
 export const SUFFIX = ['.styl', '.stylus']
 export function registerStylusAsPlain (vbox, options) {
@@ -27,7 +28,12 @@ function findNodeModulesRecursively (startPoint = '') {
 }
 
 export function registerStylusAsCss (vbox, options) {
-    const { compilerOptions = {}, burnout_timeout = 0, suffix = SUFFIX } = options || {}
+    const {
+        compilerOptions = {},
+        burnout_timeout = 0,
+        suffix = SUFFIX,
+        emitter = null
+    } = parseCommonOptions(options) || {}
     compilerOptions.paths = util.isArray(compilerOptions.paths) ? compilerOptions.paths : []
 
     setCompilerForVbox(vbox, {

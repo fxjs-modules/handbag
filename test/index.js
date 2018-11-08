@@ -12,6 +12,8 @@ run('./frontend-mvvm-framework')
 
 run('./server-proccessor')
 
+run('./register-option-hooks')
+
 if (require.main === module) {
     test.run(console.DEBUG)
     process.exit()

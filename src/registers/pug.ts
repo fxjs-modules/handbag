@@ -3,6 +3,7 @@ import path = require('path')
 import fpug = require('fib-pug')
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
+import { parseCommonOptions } from './_utils';
 
 export const SUFFIX = ['.pug', '.jade']
 
@@ -19,7 +20,13 @@ function assignFilenameOption (compilerOptions, filename) {
 }
 
 export function registerPugAsHtml (vbox, options) {
-    const { compilerOptions = {}, burnout_timeout = 0, suffix = SUFFIX } = options || {}
+    const {
+        compilerOptions = {},
+        burnout_timeout = 0,
+        suffix = SUFFIX,
+        emitter = null
+    } = parseCommonOptions(options) || {}
+
     prettyCompilerOptions(compilerOptions)
 
     setCompilerForVbox(vbox, {
@@ -31,7 +38,8 @@ export function registerPugAsHtml (vbox, options) {
 				fpug.compile(buf + '', compilerOptions)()
 			)
 		},
-        burnout_timeout
+        burnout_timeout,
+        emitter
     })
 }
 
@@ -40,7 +48,13 @@ export function hackGlobalForPugRuntime (vbox) {
 }
 
 export function registerPugAsRenderer (vbox, options) {
-    const { compilerOptions = {}, burnout_timeout = 0, suffix = SUFFIX } = options || {}
+    const {
+        compilerOptions = {},
+        burnout_timeout = 0,
+        suffix = SUFFIX,
+        emitter = null
+    } = parseCommonOptions(options) || {}
+
     prettyCompilerOptions(compilerOptions)
 
     hackGlobalForPugRuntime(vbox)
@@ -52,6 +66,7 @@ export function registerPugAsRenderer (vbox, options) {
 
             return fpug.compile(buf + '', compilerOptions)
         },
-        burnout_timeout
+        burnout_timeout,
+        emitter
     })
 }
