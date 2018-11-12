@@ -11,7 +11,7 @@ interface SetVboxOptions {
 
 function isValidSuffx (suffix: string) {
     return typeof suffix === 'string' && suffix && suffix[0] === '.'
-}   
+}
 
 interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
     timeout?: number
@@ -19,13 +19,26 @@ interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
     const timeouts = {}
 
-    const { compiler = null, emitter = null, suffix, timeout: _timeout = 1000, compile_to_iife_script = false } = options;
+    const {
+		compiler = null,
+		emitter = null,
+		suffix,
+		timeout: _timeout = 1000,
+		compile_to_iife_script = false
+	} = options;
+
     let finalCompiler = compiler
 
-    let { __burnout_timeout = 0 } = vbox as any || {}
+
+	let nirvana = false
+    let { __burnout_timeout = _timeout } = vbox as any || {}
+
     if (!Number.isInteger(__burnout_timeout))
         __burnout_timeout = 0
-    __burnout_timeout = _timeout && Number.isInteger(_timeout) ? _timeout : __burnout_timeout;
+	else if(__burnout_timeout < 0) {
+		nirvana = true
+		__burnout_timeout = Math.abs(__burnout_timeout)
+	}
 
     if (emitter) {
         finalCompiler = (buf, info) => {
@@ -54,6 +67,8 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
                 if (vbox.has(mid)) {
                     sync_lock.acquire()
                     vbox.remove(mid)
+					if (nirvana)
+						vbox.require(mid, __dirname)
                     sync_lock.release()
                 }
             }, __burnout_timeout)
@@ -73,7 +88,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
     suffixArr.forEach(suffix => {
         if(!isValidSuffx(suffix))
             throw `isValidSuffx ${suffix}`
-            
+
         vbox.setModuleCompiler(suffix, compilerFn)
     })
 }

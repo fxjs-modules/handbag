@@ -47,11 +47,11 @@ describe('register feature: hooks', () => {
             }
         })
 
-        test_files.forEach(abspath => {
-            if (exclude_exts.some(ext => abspath.endsWith(ext)))
-                return 
+        test_files.forEach(basepath => {
+            if (exclude_exts.some(ext => basepath.endsWith(ext)))
+                return
 
-            const relpath = path.join('../', abspath)
+            const relpath = path.join('../', basepath)
             vbox.require(relpath, __dirname)
         })
     })

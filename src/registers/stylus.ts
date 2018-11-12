@@ -16,8 +16,8 @@ export function registerStylusAsPlain (vbox, options) {
 
 function findNodeModulesRecursively (startPoint = '') {
     if (startPoint === '/')
-        return 
-    
+        return
+
     const absPath = path.resolve(startPoint)
     const testPath = path.join(absPath, 'node_modules')
 
@@ -49,22 +49,47 @@ export function registerStylusAsCss (vbox, options) {
             if (nmPath)
                 paths.push(nmPath)
 
-            const renderAsync = async () => {
-                return new Promise(function (resolve, reject) {
-                    stylus(stylusString)
-                        .set('filename', info.filename)
-                        .set('paths', paths)
-                        .render(function (err, css) {
-                            if (err)
-                                reject(err)
+            // const renderAsync = async () => {
+            //     return new Promise(function (resolve, reject) {
+            //         stylus(stylusString)
+            //             .set('filename', info.filename)
+            //             .set('paths', paths)
+            //             .render(function (err, css) {
+            //                 if (err)
+            //                     reject(err)
 
-                            resolve(css)
-                        })
-                })
-            }
+            //                 resolve(css)
+            //             })
+            //     })
+            // }
+            // const renderSync = util.sync(renderAsync, true)
+            // return wrapAsString(renderSync())
 
-            const renderSync = util.sync(renderAsync, true)
-            return wrapAsString(renderSync())
+			const renderCallback = (params, cb) => {
+				setTimeout(() => {
+					stylus(params.input)
+						.set('filename', params.options.filename)
+						.set('paths', params.options.paths)
+						.render(function (err, css) {
+							if (err)
+								throw err
+
+							cb(null, css)
+						})
+				}, 0);
+
+			}
+
+			const renderSync = util.sync(renderCallback, false)
+			const params = {
+				input: stylusString,
+				options: {
+					filename: info.filename,
+					paths
+				}
+			}
+
+            return wrapAsString(renderSync(params))
         },
         burnout_timeout
     })

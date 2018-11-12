@@ -13,6 +13,7 @@ run('./frontend-mvvm-framework')
 run('./server-proccessor')
 
 run('./register-option-hooks')
+run('./register-option-burnout')
 
 if (require.main === module) {
     test.run(console.DEBUG)

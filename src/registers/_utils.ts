@@ -6,18 +6,18 @@ import events = require('events')
 export function parseCommonOptions (registerOptions: any = {}): any {
     // registerOptions.suffix = registerOptions.suffix
     // registerOptions.compilerOptions = registerOptions.compilerOptions || {}
-    
+
     registerOptions.burnout_time = registerOptions.burnout_time || 0
     registerOptions.hooks = registerOptions.hooks || []
     registerOptions.emitter = registerOptions.emitter || getCommonEmitter(registerOptions.hooks)
-    
-    return registerOptions    
+
+    return registerOptions
 }
 
 export function getRollupOptionsFromRegisterOptions (registerOptions: any = {}) {
     const { rollup = {} } = registerOptions || {}
     rollup.bundleConfig = rollup.bundleConfig || {}
-    
+
     rollup.writeConfig = rollup.writeConfig || {}
     rollup.writeConfig.output = util.extend({
         format: 'umd'
