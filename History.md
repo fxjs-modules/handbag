@@ -1,7 +1,14 @@
 
-v0.2.0 / 2018-11-08
+v0.2.1 / 2018-11-12
 ==================
 
+  * support nirvana style burnout_timeout
+  * [README.md] add content about hooks
+
+v0.2.0 / 2018-11-08
+===================
+
+  * Release v0.2.0
   * support 'hooks' for all registers.
 
 v0.1.4 / 2018-11-07
