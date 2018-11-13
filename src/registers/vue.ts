@@ -17,7 +17,7 @@ const DEFAULT_ROLLUP_PLUGIN_VUE_OPTS = {
 
 function _register (asModule) {
     const default_transpileLib = asModule === true ? false : 'babel'
-    
+
     return function (vbox, options) {
         const util = require('util')
         const { default: rollup } = require('fib-rollup');
@@ -86,10 +86,10 @@ export function getRollupPluginVue () {
     return rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname).default
 }
 
-export function getDefaultPlugins (rollupPluginVueOptions = {}, tranpileMode: '' | 'buble' | 'babel' = 'babel') {
+export function getDefaultPlugins (rollupPluginVueOptions = {}, transpileLib: '' | 'buble' | 'babel' = 'babel') {
     const rollupPluginVue = getRollupPluginVue()
-    const useBuble = tranpileMode === 'buble'
-    const useBabel = tranpileMode === 'babel'
+    const useBuble = transpileLib === 'buble'
+    const useBabel = transpileLib === 'babel'
 
     const defaultPlugins = [
         rollupPluginVue(rollupPluginVueOptions),
@@ -108,6 +108,7 @@ export function getDefaultPlugins (rollupPluginVueOptions = {}, tranpileMode: ''
             lib: ["es5", "es6", "es7", "dom"],
             target: "es5",
             module: 'CommonJS',
+			allowJs: true,
             typescript: require('typescript'),
             tslib: require('tslib')
         }),

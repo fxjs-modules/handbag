@@ -24,8 +24,7 @@ describe('register feature: burnout about options', () => {
 		)
 	)
 
-	;
-	[
+	;[
 		[0, 30, true],
 		[0, 20, true],
 		[0, 50, true],

@@ -49,21 +49,13 @@ export function registerStylusAsCss (vbox, options) {
             if (nmPath)
                 paths.push(nmPath)
 
-            // const renderAsync = async () => {
-            //     return new Promise(function (resolve, reject) {
-            //         stylus(stylusString)
-            //             .set('filename', info.filename)
-            //             .set('paths', paths)
-            //             .render(function (err, css) {
-            //                 if (err)
-            //                     reject(err)
-
-            //                 resolve(css)
-            //             })
-            //     })
-            // }
-            // const renderSync = util.sync(renderAsync, true)
-            // return wrapAsString(renderSync())
+			const params = {
+				input: stylusString,
+				options: {
+					filename: info.filename,
+					paths
+				}
+			}
 
 			const renderCallback = (params, cb) => {
 				setTimeout(() => {
@@ -77,20 +69,13 @@ export function registerStylusAsCss (vbox, options) {
 							cb(null, css)
 						})
 				}, 0);
-
 			}
 
 			const renderSync = util.sync(renderCallback, false)
-			const params = {
-				input: stylusString,
-				options: {
-					filename: info.filename,
-					paths
-				}
-			}
 
             return wrapAsString(renderSync(params))
         },
-        burnout_timeout
+        burnout_timeout,
+		emitter
     })
 }
