@@ -6,7 +6,6 @@ const fxHandbag = require('../../')
 const stylus = require('stylus')
 
 const vm = require('vm')
-const util = require('util')
 const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-hash')()
 
 describe('register: stylus', () => {
@@ -84,6 +83,21 @@ describe('register: stylus', () => {
             renderedCss = renderer()
         })
     })
+
+	it('valid registerStylusAsRenderer', () => {
+        vbox = new vm.SandBox(moduleHash)
+
+        fxHandbag.registers.stylus.registerStylusAsRenderer(vbox)
+
+        const renderer = vbox.require('./test.styl', __dirname)
+
+		renderer.render(function (err, css) {
+			if (err)
+				throw err
+
+			renderedCssList.push(css)
+		})
+	})
 })
 
 if (require.main === module) {
