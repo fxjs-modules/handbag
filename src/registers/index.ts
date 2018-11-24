@@ -16,7 +16,7 @@ export { markdown }
 import * as typescript from './typescript'
 export { typescript }
 
-import * as rollup from './rollup'
+import * as rollup from './rollup'
 export { rollup }
 
 import * as vue from './vue'

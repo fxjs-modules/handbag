@@ -1,3 +1,5 @@
+/// <reference types="fibjs" />
+
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 
 import moduleList = require('@fibjs/builtin-modules')
