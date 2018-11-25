@@ -1,7 +1,18 @@
 
-v0.2.1 / 2018-11-12
+v0.2.2 / 2018-11-25
 ==================
 
+  * upgrade dependencies.
+  * fix file symbol problem, add appveyor ci config yml.
+  * add register:registerStylusAsRenderer
+  * [register:rollup] support emitter
+  * code clean
+  * upgrade dependencies, better test cases.
+
+v0.2.1 / 2018-11-12
+===================
+
+  * Release v0.2.1
   * support nirvana style burnout_timeout
   * [README.md] add content about hooks
 
