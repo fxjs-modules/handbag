@@ -1,7 +1,8 @@
 # 👝 @fxjs/handbag
 
-[![Build Status](https://travis-ci.org/fxjs-modules/handbag.svg)](https://travis-ci.org/fxjs-modules/handbag)
 [![NPM version](https://img.shields.io/npm/v/@fxjs/handbag.svg)](https://www.npmjs.org/package/@fxjs/handbag)
+[![Build Status](https://travis-ci.org/fxjs-modules/handbag.svg)](https://travis-ci.org/fxjs-modules/handbag)
+[![Build status](https://ci.appveyor.com/api/projects/status/4qsyfynj1t0559pl?svg=true)](https://ci.appveyor.com/project/richardo2016/handbag)
 
 ## Pre-requisite
 

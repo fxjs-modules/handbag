@@ -74,7 +74,7 @@ export const registerVueAsRollupedJavascript = _register(false)
 export const registerVueAsComponentOptions = _register(true)
 
 function getRequireVBox () {
-    return fibRollup.getCustomizedVBox({
+    return fibRollup.utils.vbox.getCustomizedVBox({
         prettier: {
             format: c => c
         }

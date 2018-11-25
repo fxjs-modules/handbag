@@ -4,7 +4,7 @@
   "description": "require resources directly 👝",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "fib-typify src -c .typifyrc.json -o lib",
+    "build": "fib-typify src -o lib",
     "test": "fibjs test/index.js",
     "ci": "npm run build && npm run test",
     "prepublishOnly": "npm run build"
@@ -27,8 +27,8 @@
     "@babel/standalone": "^7.1.0",
     "@fibjs/builtin-modules": "^0.1.0",
     "fib-pug": "0.0.3",
-    "fib-rollup": "^0.2.2",
-    "fib-typify": "^0.3.1",
+    "fib-rollup": "^0.3.0",
+    "fib-typify": "^0.4.1",
     "stylus": "^0.54.5"
   },
   "devDependencies": {
