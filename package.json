@@ -28,7 +28,7 @@
     "@fibjs/builtin-modules": "^0.1.0",
     "fib-pug": "0.0.3",
     "fib-rollup": "^0.3.0",
-    "fib-typify": "^0.4.1",
+    "fib-typify": "^0.5.0",
     "stylus": "^0.54.5"
   },
   "devDependencies": {
