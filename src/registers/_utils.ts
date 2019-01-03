@@ -95,11 +95,12 @@ export function createVirtualZipFS (zipName: string = '/unzip.zip', filepath: st
     return () => fs.clearZipFS(zipName)
 }
 
-// function getOneSuffixPlainVBox (suffix) {
-//     const vm = require('vm')
+const UglifyJS = require("uglify-js");
 
-//     const vbox = new vm.SandBox(moduleHash)
-//     registerAsPlain(vbox, suffix)
+export function uglifyJs (code: string | Class_Buffer, options?: any) {
+    const result = UglifyJS.minify(code, options);
+    if (result.error)
+      throw result.error;
 
-//     return vbox
-// }
+	return result;
+}

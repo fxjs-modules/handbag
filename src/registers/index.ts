@@ -21,3 +21,6 @@ export { rollup }
 
 import * as vue from './vue'
 export { vue }
+
+import * as riot from './riot'
+export { riot }

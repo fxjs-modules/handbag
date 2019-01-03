@@ -182,6 +182,13 @@ it always transpile component js with typescript
      - `tslib`
      - `typescript`
 
+`riot.registerRiotAsJs(vbox, options)`
+---
+- options.suffix: default `['.tag', '.tsx']`
+- options.compress_js: default `true`
+
+register compiler to require `.tag` file as **compiled** javascript string starting with `riot.tag2(...)`.
+
 `image.registerImageAsBase64(vbox, options)`
 ---
 - options.suffix: default `['.png', '.jpg', '.jpeg', '.gif', '.bmp']`

@@ -109,23 +109,11 @@ describe('register: riot', () => {
 
     it('registerRiotAsJs', () => {
         vbox = new vm.SandBox(moduleHash)
-        vbox.add('module', class Module {})
-        const riot = vbox.require('riot', __dirname)
-
-        function registerRiotAsJs (vbox) {
-            const compilerOptions = {
-            }
-
-            fxHandbag.vboxUtils.setCompilerForVbox(vbox, {
-                suffix: '.tag',
-                compiler: (buf, info) => fxHandbag.vboxUtils.wrapAsString(
-                    riot.compile(buf + '', compilerOptions, info.filename)
-                )
-            })
-        }
-        registerRiotAsJs(vbox)
+        fxHandbag.registers.riot.registerRiotAsJs(vbox)
 
         const compiledJs = vbox.require('./test.tag', __dirname)
+		assert.isString(compiledJs)
+		assert.isTrue(compiledJs.startsWith('riot.tag2('))
     })
 })
 
