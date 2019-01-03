@@ -13,6 +13,13 @@ interface SetBurnAfterTimeoutVboxOptions extends FxHandbag.SetVboxOptions {
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
     const timeouts = {}
 
+	function clear_mid (mid: string | number) {
+		if (timeouts[mid])
+			clearTimeout(timeouts[mid])
+
+		timeouts[mid] = null
+	}
+
     const {
 		compiler = null,
 		emitter = null,
@@ -22,7 +29,6 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 	} = options;
 
     let finalCompiler = compiler
-
 
 	let nirvana = false
     let { __burnout_timeout = _timeout } = vbox as any || {}
@@ -51,18 +57,22 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 
         const {filename: mid = ''} = info || {}
 
-        if (timeouts[mid]) {
-            clearTimeout(timeouts[mid])
-            timeouts[mid] = null
-        }
+        if (timeouts[mid])
+			clear_mid(mid)
 
         if (__burnout_timeout) {
             timeouts[mid] = setTimeout(() => {
                 if (vbox.has(mid)) {
                     sync_lock.acquire()
                     vbox.remove(mid)
-					if (nirvana)
-						vbox.require(mid, __dirname)
+					if (nirvana) {
+						try {
+							vbox.require(mid, __dirname)
+						} catch (e) {
+							clear_mid(mid)
+						} finally {
+						}
+					}
                     sync_lock.release()
                 }
             }, __burnout_timeout)
