@@ -1,3 +1,5 @@
+/// <reference path="../../@types/index.d.ts" />
+
 import fTypify = require('fib-typify')
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
@@ -5,8 +7,8 @@ import { parseCommonOptions } from './_utils';
 
 export const SUFFIX = ['.ts', '.tsx']
 
-function _register (asPlainJavascript) {
-    return function (vbox, options) {
+function _register (asPlainJavascript: boolean) {
+    return function (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
         const {
             compilerOptions = fTypify.defaultCompilerOptions,
             burnout_timeout = 0,
@@ -18,10 +20,10 @@ function _register (asPlainJavascript) {
 
         switch (asPlainJavascript) {
             case true:
-                compiler = (buf, info) => wrapAsString(fTypify.compileRaw(buf + '', compilerOptions))
+                compiler = (buf: Class_Buffer) => wrapAsString(fTypify.compileRaw(buf + '', compilerOptions))
                 break
             case false:
-                compiler = (buf, info) => fTypify.compileRaw(buf + '', compilerOptions)
+                compiler = (buf: Class_Buffer) => fTypify.compileRaw(buf + '', compilerOptions)
                 break
             case undefined:
             default:
@@ -35,7 +37,7 @@ function _register (asPlainJavascript) {
             emitter
         })
     }
-    
+
 }
 
 export const registerTypescriptAsPlainJavascript = _register(true)

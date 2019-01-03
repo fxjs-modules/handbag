@@ -3,13 +3,7 @@
 import util = require('util')
 import events = require('events')
 
-export function parseCommonOptions (registerOptions: any = {}): {
-	burnout_timeout: number,
-	hooks: Function[],
-	emitter: Class_EventEmitter,
-	suffix: string[],
-	compilerOptions: any
-} {
+export function parseCommonOptions (registerOptions: FxHandbag.RegisterOptions = {}): FxHandbag.CommonRegisterOptions {
     // registerOptions.suffix = registerOptions.suffix
     // registerOptions.compilerOptions = registerOptions.compilerOptions
 
@@ -17,10 +11,10 @@ export function parseCommonOptions (registerOptions: any = {}): {
     registerOptions.hooks = registerOptions.hooks || []
     registerOptions.emitter = registerOptions.emitter || getCommonEmitter(registerOptions.hooks)
 
-    return registerOptions
+    return registerOptions as FxHandbag.CommonRegisterOptions
 }
 
-export function getRollupOptionsFromRegisterOptions (registerOptions: any = {}) {
+export function getRollupOptionsFromRegisterOptions (registerOptions: FxHandbag.RegisterOptions = {}) {
     const { rollup = {} } = registerOptions || {}
     rollup.bundleConfig = rollup.bundleConfig || {}
 
@@ -65,7 +59,7 @@ export function getCommonEmitter (onHooks): Class_EventEmitter {
  * - 'generated', [{result: generatedConent}]
  */
 // internal method
-export function makeHookPayload (type: string, ...args): {[key: string]: any} {
+export function makeHookPayload (type: string, ...args: any[]): {[key: string]: any} {
     let payload = {}
     switch (type) {
         case 'before_transpile':

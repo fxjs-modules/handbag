@@ -1,3 +1,5 @@
+/// <reference path="../../@types/index.d.ts" />
+
 import path = require('path')
 
 import fpug = require('fib-pug')
@@ -15,13 +17,13 @@ function prettyCompilerOptions (compilerOptions) {
     return compilerOptions
 }
 
-function assignFilenameOption (compilerOptions, filename) {
+function assignFilenameOption (compilerOptions: FxHandbag.CompilerOptionsTypeCommon, filename: string) {
 	compilerOptions.filename = compilerOptions.filename || filename
 }
 
-export function registerPugAsHtml (vbox, options) {
+export function registerPugAsHtml (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const {
-        compilerOptions = {},
+        compilerOptions = <FxHandbag.CompilerOptionsTypeCommon>{},
         burnout_timeout = 0,
         suffix = SUFFIX,
         emitter = null
@@ -31,7 +33,7 @@ export function registerPugAsHtml (vbox, options) {
 
     setCompilerForVbox(vbox, {
         suffix,
-        compiler: (buf, info) => {
+        compiler: (buf: string, info) => {
 			assignFilenameOption(compilerOptions, info.filename)
 
 			return wrapAsString(
@@ -43,13 +45,13 @@ export function registerPugAsHtml (vbox, options) {
     })
 }
 
-export function hackGlobalForPugRuntime (vbox) {
+export function hackGlobalForPugRuntime (vbox: Class_SandBox): void {
     vbox.run(path.resolve(__dirname, './global_hack/pug.js'))
 }
 
-export function registerPugAsRenderer (vbox, options) {
+export function registerPugAsRenderer (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const {
-        compilerOptions = {},
+        compilerOptions = <FxHandbag.CompilerOptionsTypeCommon>{},
         burnout_timeout = 0,
         suffix = SUFFIX,
         emitter = null
@@ -61,7 +63,7 @@ export function registerPugAsRenderer (vbox, options) {
     vbox.run(path.resolve(__dirname, './global_hack/pug.js'))
     setCompilerForVbox(vbox, {
         suffix,
-        compiler: (buf, info) => {
+        compiler: (buf: Class_Buffer, info: any) => {
 			assignFilenameOption(compilerOptions, info.filename)
 
             return fpug.compile(buf + '', compilerOptions)

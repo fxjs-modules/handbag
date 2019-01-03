@@ -1,3 +1,5 @@
+/// <reference path="../../@types/index.d.ts" />
+
 import fs = require('fs')
 import path = require('path')
 import util = require('util')
@@ -9,7 +11,7 @@ import { registerAsPlain } from './plain'
 import { parseCommonOptions } from './_utils';
 
 export const SUFFIX = ['.styl', '.stylus']
-export function registerStylusAsPlain (vbox, options) {
+export function registerStylusAsPlain (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const { suffix = SUFFIX } = options || {}
     return registerAsPlain(vbox, {suffix, ...options})
 }
@@ -27,9 +29,9 @@ function findNodeModulesRecursively (startPoint = '') {
         return testPath
 }
 
-export function registerStylusAsCss (vbox, options) {
+export function registerStylusAsCss (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const {
-        compilerOptions = {},
+        compilerOptions = <FxHandbag.CompilerOptionsTypeCommon>{},
         burnout_timeout = 0,
         suffix = SUFFIX,
         emitter = null
@@ -38,7 +40,7 @@ export function registerStylusAsCss (vbox, options) {
 
     setCompilerForVbox(vbox, {
         suffix,
-        compiler: (buf, info) => {
+        compiler: (buf: Class_Buffer, info: any) => {
 			const params = collectRenderParams(compilerOptions, info.filename, buf + '')
 
 			const renderCallback = (params, cb) => {
@@ -64,9 +66,9 @@ export function registerStylusAsCss (vbox, options) {
     })
 }
 
-export function registerStylusAsRenderer (vbox, options) {
+export function registerStylusAsRenderer (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const {
-		compilerOptions = {},
+		compilerOptions = <FxHandbag.CompilerOptionsTypeCommon>{},
         burnout_timeout = 0,
         suffix = SUFFIX,
         emitter = null
@@ -74,7 +76,7 @@ export function registerStylusAsRenderer (vbox, options) {
 
 	setCompilerForVbox(vbox, {
         suffix,
-        compiler: (buf, info) => {
+        compiler: (buf: Class_Buffer, info: any) => {
 			const params = collectRenderParams(compilerOptions, info.filename, buf + '')
 
 			return `

@@ -1,6 +1,8 @@
+/// <reference path="../../@types/index.d.ts" />
+
 const fibRollup = require('fib-rollup')
 
-import { parseCommonOptions, makeHookPayload } from './_utils'
+import { parseCommonOptions } from './_utils'
 import { isProduction } from '../utils';
 import { setCompilerForVbox, wrapAsString } from '../vbox';
 import { getRollupOptionsFromRegisterOptions } from './_utils';
@@ -15,10 +17,10 @@ const DEFAULT_ROLLUP_PLUGIN_VUE_OPTS = {
     }
 }
 
-function _register (asModule) {
+function _register (asModule: boolean) {
     const default_transpileLib = asModule === true ? false : 'babel'
 
-    return function (vbox, options) {
+    return function (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
         const util = require('util')
         const { default: rollup } = require('fib-rollup');
 
@@ -45,7 +47,7 @@ function _register (asModule) {
 
         setCompilerForVbox(vbox, {
             suffix,
-            compiler: (buf, info) => {
+            compiler: (buf: Class_Buffer, info: any) => {
                 const bundle = util.sync(rollup.rollup, true)({
                     input: info.filename,
                     external: moduleList,

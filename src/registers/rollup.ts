@@ -1,4 +1,4 @@
-/// <reference types="fibjs" />
+/// <reference path="../../@types/index.d.ts" />
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 
@@ -7,13 +7,8 @@ import { getRollupOptionsFromRegisterOptions, parseCommonOptions } from './_util
 
 export const SUFFIX = ['.ts', '.tsx']
 
-/**
- * @deprecated
- * @param vbox
- * @param options
- */
-export function _register(asPlainScript = true) {
-    return function (vbox, options) {
+function _register(asPlainScript = true) {
+    return function (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
         const util = require('util')
         const { default: rollup, plugins } = require('fib-rollup');
 
@@ -27,7 +22,7 @@ export function _register(asPlainScript = true) {
 
         setCompilerForVbox(vbox, {
             suffix,
-            compiler: (buf, info) => {
+            compiler: (buf: Class_Buffer, info: any) => {
                 const bundle = util.sync(rollup.rollup, true)({
                     input: info.filename,
                     external: moduleList,

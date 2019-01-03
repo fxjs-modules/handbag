@@ -1,3 +1,5 @@
+/// <reference path="../../@types/index.d.ts" />
+
 import riot = require('riot-compiler')
 
 import { setCompilerForVbox, wrapAsString } from '../vbox'
@@ -5,9 +7,9 @@ import { parseCommonOptions, uglifyJs } from './_utils';
 
 export const SUFFIX = ['.tag'];
 
-export function registerRiotAsJs (vbox, options) {
+export function registerRiotAsJs (vbox: Class_SandBox, options: FxHandbag.RegisterOptions): void {
     const {
-        compilerOptions = {},
+        compilerOptions = <FxHandbag.CompilerOptionsTypeCommon>{},
         burnout_timeout = 0,
         suffix = SUFFIX,
         emitter = null

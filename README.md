@@ -203,7 +203,7 @@ options passed to register's compiler/transpilor/renderer, view details in speci
 
 ### `registerOptions.hooks`
 
-there's one `EventEmitter` object in `registerOptions.emitter`, all `key` in `registerOptions.hooks` would be registered as emitter's event_name with handler from `registerOptions.hooks[key]`, e.g:
+there's one `emitter` option with `EventEmitter` type in `registerOptions`, all `key` in `registerOptions.hooks` would be registered as emitter's event_name with handler from `registerOptions.hooks[key]`, e.g:
 
 ```javascript
 {

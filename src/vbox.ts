@@ -1,19 +1,13 @@
+/// <reference path="../@types/index.d.ts" />
+
 import coroutine = require('coroutine')
 import { makeHookPayload } from './registers/_utils';
-
-interface SetVboxOptions {
-    suffix: string|string[],
-    compiler: Function,
-    compile_to_iife_script?: boolean
-
-    emitter?: Class_EventEmitter
-}
 
 function isValidSuffx (suffix: string) {
     return typeof suffix === 'string' && suffix && suffix[0] === '.'
 }
 
-interface SetBurnAfterTimeoutVboxOptions extends SetVboxOptions {
+interface SetBurnAfterTimeoutVboxOptions extends FxHandbag.SetVboxOptions {
     timeout?: number
 }
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
@@ -41,7 +35,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 	}
 
     if (emitter) {
-        finalCompiler = (buf, info) => {
+        finalCompiler = (buf: Class_Buffer, info: any) => {
             emitter.emit('before_transpile', makeHookPayload('before_transpile', buf, info))
 
             const payload = makeHookPayload('generated', compiler(buf, info))
@@ -93,10 +87,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
     })
 }
 
-interface SetCompilerForVboxOptions extends SetVboxOptions {
-    burnout_timeout?: number,
-}
-export function setCompilerForVbox (vbox: Class_SandBox, options: SetCompilerForVboxOptions) {
+export function setCompilerForVbox (vbox: Class_SandBox, options: FxHandbag.SetCompilerForVboxOptions) {
     return setBurnAfterTimeoutVbox(vbox, {...options, timeout: options.burnout_timeout || 0})
 }
 
