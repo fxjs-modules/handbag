@@ -1,7 +1,19 @@
 
-v0.2.2 / 2018-11-25
+v0.2.3 / 2019-01-03
 ==================
 
+  * add ts/buble/stylus example about riot register.
+  * robust about nirvana option.
+  * add examples/riot-todo
+  * add typo.
+  * add `riot.registerRiotAsJs`
+  * code clean.
+  * upgrade fib-typify.
+
+v0.2.2 / 2018-11-25
+===================
+
+  * Release v0.2.2
   * upgrade dependencies.
   * fix file symbol problem, add appveyor ci config yml.
   * add register:registerStylusAsRenderer

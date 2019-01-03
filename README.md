@@ -184,6 +184,8 @@ it always transpile component js with typescript
 
 `riot.registerRiotAsJs(vbox, options)`
 ---
+**started from `0.2.3`**
+
 - options.suffix: default `['.tag', '.tsx']`
 - options.compress_js: default `true`
 
