@@ -2,6 +2,8 @@
 
 import riot = require('riot-compiler')
 
+import fibTypify = require('fib-typify')
+
 import { setCompilerForVbox, wrapAsString } from '../vbox'
 import { parseCommonOptions, uglifyJs } from './_utils';
 
@@ -14,6 +16,8 @@ export function registerRiotAsJs (vbox: Class_SandBox, options: FxHandbag.Regist
         suffix = SUFFIX,
         emitter = null
     } = parseCommonOptions(options) || {}
+
+	setup_default_parse(vbox)
 
 	const {
 		compress_js = true
@@ -38,4 +42,13 @@ export function registerRiotAsJs (vbox: Class_SandBox, options: FxHandbag.Regist
         burnout_timeout,
         emitter
     })
+}
+
+function setup_default_parse (vbox: Class_SandBox) {
+	// vbox.add({
+	// 	'typescript-simple': require('typescript')
+	// })
+	riot.parsers.js.ts = function (code: string) {
+		return fibTypify.compileRaw(code)
+	}
 }

@@ -9,8 +9,9 @@ const detectPort = require('@fibjs/detect-port');
 const port = detectPort(process.env.PORT);
 
 const vbox = new vm.SandBox({});
-fxHb.registers.riot.registerRiotAsJs(vbox)
-fxHb.registers.plain.registerAsPlain(vbox, {suffix: ['.html']})
+const commonOptions = { burnout_timeout: -2000 };
+fxHb.registers.riot.registerRiotAsJs(vbox, {...commonOptions})
+fxHb.registers.plain.registerAsPlain(vbox, {...commonOptions, suffix: ['.html']})
 
 const routing = new mq.Routing({
 	'(.*).html$': (req, _path) => req.response.write(vbox.require(`../views/${_path}`, __dirname)),
