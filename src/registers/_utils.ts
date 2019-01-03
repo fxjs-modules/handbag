@@ -3,11 +3,17 @@
 import util = require('util')
 import events = require('events')
 
-export function parseCommonOptions (registerOptions: any = {}): any {
+export function parseCommonOptions (registerOptions: any = {}): {
+	burnout_timeout: number,
+	hooks: Function[],
+	emitter: Class_EventEmitter,
+	suffix: string[],
+	compilerOptions: any
+} {
     // registerOptions.suffix = registerOptions.suffix
-    // registerOptions.compilerOptions = registerOptions.compilerOptions || {}
+    // registerOptions.compilerOptions = registerOptions.compilerOptions
 
-    registerOptions.burnout_time = registerOptions.burnout_time || 0
+    registerOptions.burnout_timeout = registerOptions.burnout_timeout || 0
     registerOptions.hooks = registerOptions.hooks || []
     registerOptions.emitter = registerOptions.emitter || getCommonEmitter(registerOptions.hooks)
 

@@ -37,7 +37,7 @@ describe('register feature: burnout about options', () => {
 		[-20, 30, true],
 		[-20, 60, true]
 	].forEach(([burnout_timeout, test_timeout, result]) => {
-		describe(`burnout_time: ${burnout_timeout}, test_timeout: ${test_timeout}, result: ${result}`, () => {
+		describe(`burnout_timeout: ${burnout_timeout}, test_timeout: ${test_timeout}, result: ${result}`, () => {
 			const vbox = new vm.SandBox(moduleHash)
 
 			fxHandbag.registers.plain.registerAsPlain(vbox, {

@@ -1,4 +1,4 @@
-import fibRollup = require('fib-rollup')
+const fibRollup = require('fib-rollup')
 
 import { parseCommonOptions, makeHookPayload } from './_utils'
 import { isProduction } from '../utils';
