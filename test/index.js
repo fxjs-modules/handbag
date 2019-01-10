@@ -10,10 +10,12 @@ run('./frontend-js-preprocessor')
 
 run('./frontend-mvvm-framework')
 
-run('./server-proccessor')
-
 run('./register-option-hooks')
 run('./register-option-burnout')
+
+run('./schema-graphql')
+
+run('./server-proccessor')
 
 if (require.main === module) {
     test.run(console.DEBUG)

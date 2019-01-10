@@ -4,6 +4,9 @@ export { plain }
 import * as image from './image'
 export { image }
 
+import * as graphql from './graphql'
+export { graphql }
+
 import * as stylus from './stylus'
 export { stylus }
 

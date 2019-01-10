@@ -115,11 +115,17 @@ register compiler to require pug file as pug renderer
 
 register compiler to require pug file as rendered html
 
+
+
+
 `stylus.registerStylusAsCss(vbox, options)`
 ---
 - options.suffix: default `['.styl', '.stylus']`
 
 register compiler to require stylus file as rendered html
+
+
+
 
 `typescript.registerTypescriptAsModule(vbox, options)`
 ---
@@ -133,6 +139,9 @@ register compiler to require typescript file as one valid module
 
 register compiler to require typescript file as plain javascript string.
 
+
+
+
 `rollup.registerAsModule(vbox, options)`
 ---
 - options.suffix: default `['.ts', '.tsx']`
@@ -140,9 +149,10 @@ register compiler to require typescript file as plain javascript string.
 
 register compiler to require typescript file as module.
 
-**require**
+**extra dependencies**
 - [fib-rollup]
 - [rollup-plugin-commonjs]
+
 
 `rollup.registerAsPlainJavascript(vbox, options)`
 ---
@@ -151,9 +161,10 @@ register compiler to require typescript file as module.
 
 register compiler to require typescript file as **rolluped** plain javascript string.
 
-**require**
+**extra dependencies**
 - [fib-rollup]
 - [rollup-plugin-commonjs]
+
 
 `vue.registerVueAsRollupedJavascript(vbox, options)`
 ---
@@ -172,7 +183,7 @@ register compiler to require typescript file as **rolluped** plain javascript st
 it would compile vue component js to 'es5' by default. If `<script lang="ts">` set,
 it always transpile component js with typescript
 
-**require**
+**extra dependencies**
 - [fib-rollup]
 - [rollup-plugin-commonjs]
 - [rollup-plugin-vue]
@@ -181,6 +192,7 @@ it always transpile component js with typescript
 - [rollup-plugin-typescript] (if use lang="ts")
      - `tslib`
      - `typescript`
+
 
 `riot.registerRiotAsJs(vbox, options)`
 ---
@@ -191,11 +203,51 @@ it always transpile component js with typescript
 
 register compiler to require `.tag` file as **compiled** javascript string starting with `riot.tag2(...)`.
 
+
+
+
 `image.registerImageAsBase64(vbox, options)`
 ---
 - options.suffix: default `['.png', '.jpg', '.jpeg', '.gif', '.bmp']`
 
 register compiler to require image file as base64 string
+
+
+
+
+`graphql.registerGraphQLParser(vbox, options)`
+---
+**started from `0.2.4`**
+
+- options.suffix: default `['.gql', '.graphql']`
+
+register compiler to require graphql file as parsed [graphql-js] object.
+
+**extra dependencies**
+- [graphql]
+- [graphql-tag]
+
+
+
+
+`graphql.registerGraphQLAsQueryBuilder(vbox, options)`
+---
+**started from `0.2.4`**
+
+- options.suffix: default `['.gql', '.graphql']`
+
+register compiler to require graphql file as string builder, it's just simple text replacor.
+
+```javascript
+// index.js
+graphql.registerGraphQLAsQueryBuilder(vbox)
+
+vbox.require('./foo.gql')({foo: 'bar'}) // result is { q1(foo: 'bar'){} }
+
+// foo.gql
+{ q1(foo: $foo){} }
+```
+
 
 ## common options
 
@@ -289,3 +341,4 @@ Copyright (c) 2018-present, Richard
 [rollup-plugin-buble]:https://www.npmjs.com/package/rollup-plugin-buble
 [rollup-plugin-commonjs]:https://www.npmjs.com/package/rollup-plugin-commonjs
 [rollup-plugin-vue]:https://www.npmjs.com/package/rollup-plugin-vue
+[graphql-js]:https://github.com/graphql/graphql-js

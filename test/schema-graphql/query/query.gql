@@ -1,0 +1,16 @@
+{
+    abc(
+        var1: $var
+        var2: $_1var
+        var3: $var_
+    ) {
+        field1(
+            l2_var1: $l2_var0
+            l2_var2: $l2_var1
+        ){
+            field1_1
+            field1_2
+        }
+        field2
+    }
+}

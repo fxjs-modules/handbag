@@ -1,0 +1,16 @@
+{
+    abc(
+        var1: 0
+        var2: 1
+        var3: 2
+    ) {
+        field1(
+            l2_var1: 20
+            l2_var2: 21
+        ){
+            field1_1
+            field1_2
+        }
+        field2
+    }
+}
