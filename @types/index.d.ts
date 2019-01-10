@@ -64,6 +64,11 @@ declare namespace FxHandbag {
 	}
 
 	interface Compilers {
+		requireAsPath(buf?: Class_Buffer, info?): string
+		requireAsPlain(buf?: Class_Buffer, info?): string
+	}
+
+	interface Registers {
 		plain: {
 			registerAsPlain: RegisterFunction
 		}
@@ -104,10 +109,6 @@ declare namespace FxHandbag {
 		riot: {
 			registerRiotAsJs: RegisterFunction
 		}
-	}
-
-	interface Registers {
-
 	}
 
 	interface RegisterUtils {
