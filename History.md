@@ -1,7 +1,16 @@
 
-v0.2.3 / 2019-01-03
+v0.2.4 / 2019-01-11
 ==================
 
+  * support graphql register.
+  * add examples/vue-todo.
+  * typo fix.
+  * upgrade .npmignore
+
+v0.2.3 / 2019-01-03
+===================
+
+  * Release v0.2.3
   * add ts/buble/stylus example about riot register.
   * robust about nirvana option.
   * add examples/riot-todo
