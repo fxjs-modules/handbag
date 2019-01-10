@@ -34,12 +34,23 @@ declare namespace FxHandbag {
 		compilerOptions: CompilerOptionsTypeCommon
 	}
 
-	interface RegisterOptions<CompilerOptionsType = CompilerOptionsTypeCommon> {
+	interface VBoxCompilerOptionsBase<CompilerOptionsType = CompilerOptionsTypeCommon> {
 		burnout_timeout?: number,
 		hooks?: Function[],
 		emitter?: Class_EventEmitter,
 		suffix?: string[],
 		compilerOptions?: CompilerOptionsType
+
+		[key: string]: any
+	}
+
+	interface RegisterOptions<CompilerOptionsType = CompilerOptionsTypeCommon> extends VBoxCompilerOptionsBase<CompilerOptionsType> {
+		burnout_timeout?: number
+
+		[key: string]: any
+	}
+
+	interface PipeOptions<CompilerOptionsType = CompilerOptionsTypeCommon> extends VBoxCompilerOptionsBase<CompilerOptionsType> {
 
 		[key: string]: any
 	}
