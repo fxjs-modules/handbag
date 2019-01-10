@@ -64,6 +64,10 @@ declare namespace FxHandbag {
 		image: {
 			registerImageAsBase64: RegisterFunction
 		}
+		ｇraphql: {
+			registerGraphQLParser: RegisterFunction
+			registerGraphQLAsQueryBuilder: RegisterFunction
+		}
 		stylus: {
 			registerStylusAsPlain: RegisterFunction
 			registerStylusAsCss: RegisterFunction

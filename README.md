@@ -341,4 +341,7 @@ Copyright (c) 2018-present, Richard
 [rollup-plugin-buble]:https://www.npmjs.com/package/rollup-plugin-buble
 [rollup-plugin-commonjs]:https://www.npmjs.com/package/rollup-plugin-commonjs
 [rollup-plugin-vue]:https://www.npmjs.com/package/rollup-plugin-vue
+[rollup-plugin-typescript]:https://www.npmjs.com/package/rollup-plugin-typescript
 [graphql-js]:https://github.com/graphql/graphql-js
+[graphql]:https://github.com/graphql/graphql-js
+[graphql-tag]:https://github.com/apollographql/graphql-tag
