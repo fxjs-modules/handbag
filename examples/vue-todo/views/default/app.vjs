@@ -1,0 +1,7 @@
+;new Vue({
+	el: '#app',
+	components: {
+		Todo: () => System.import('./todo.vue')
+	},
+	template: "<Todo />"
+})
