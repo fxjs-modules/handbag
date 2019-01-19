@@ -33,7 +33,7 @@ export function registerRiotAsJs (vbox: Class_SandBox, options: FxHandbag.Regist
 				code = code.code
 
 			if (compress_js)
-				code = uglifyJs(code, { fromString: true })
+				code = uglifyJs(code)
 			// fetch result from uglifyJs's result
 			code = code.code
 
