@@ -1,7 +1,14 @@
 
-v0.2.4 / 2019-01-11
+v0.2.5 / 2019-01-20
 ==================
 
+  * typo fix.
+  * typo and doc fix.
+
+v0.2.4 / 2019-01-11
+===================
+
+  * Release v0.2.4
   * support graphql register.
   * add examples/vue-todo.
   * typo fix.
