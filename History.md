@@ -1,7 +1,13 @@
 
-v0.2.5 / 2019-01-20
+v0.2.6 / 2019-01-20
 ==================
 
+  * specify uglify-js as dependency and adjust it.
+
+v0.2.5 / 2019-01-20
+===================
+
+  * Release v0.2.5
   * typo fix.
   * typo and doc fix.
 
