@@ -118,7 +118,7 @@ declare namespace FxHandbag {
 	}
 }
 
-declare module "@fxjs/hangbag" {
+declare module "@fxjs/handbag" {
 	const mod: FxHandbag.ExportModule
 	export = mod
 }
