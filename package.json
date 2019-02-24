@@ -7,7 +7,7 @@
   "scripts": {
     "build": "fib-typify src -o lib",
     "test": "fibjs test/index.js",
-    "ci": "npm run build && NO_BO_TEST=1 npm run test",
+    "ci": "npm run build && cross-env NO_BO_TEST=1 npm run test",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -40,6 +40,7 @@
     "@fibjs/fs-readdir-recursive": "^1.0.2",
     "@types/fibjs": "^0.26.5",
     "cheerio": "^1.0.0-rc.2",
+    "cross-env": "^5.2.0",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "jstransformer-stylus": "^1.5.0",
