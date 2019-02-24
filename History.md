@@ -1,7 +1,18 @@
 
-v0.2.6 / 2019-01-20
+v0.2.7 / 2019-02-25
 ==================
 
+  * upgrade dependencies, adapt fib-rollup v0.4.0(due to its dependency on rollup v1 rather v0.66.x)
+  * robust.
+  * little fix.
+  * code, doc clean.
+  * support react register.
+  * migrate LICENSE to MIT
+
+v0.2.6 / 2019-01-20
+===================
+
+  * Release v0.2.6
   * specify uglify-js as dependency and adjust it.
 
 v0.2.5 / 2019-01-20
