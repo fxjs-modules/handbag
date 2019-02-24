@@ -11,7 +11,9 @@ run('./frontend-js-preprocessor')
 run('./frontend-mvvm-framework')
 
 run('./register-option-hooks')
-run('./register-option-burnout')
+
+if (!process.env.NO_BO_TEST)
+    run('./register-option-burnout')
 
 run('./schema-graphql')
 

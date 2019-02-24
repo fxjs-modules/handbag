@@ -45,18 +45,25 @@ describe('register: vue', () => {
         assert.isTrue(rolledJs.includes('async '))
     })
 
-    it('require vue as componentOptions', () => {
-        vbox = new vm.SandBox(moduleHash)
-        fxHandbag.registers.vue.registerVueAsComponentOptions(vbox, {
-        })
+    ;[
+        'buble',
+        'babel'
+    ].forEach((transpileLib) => {
+        it(`require vue as componentOptions: ${transpileLib}`, () => {
+            const vbox = new vm.SandBox(moduleHash)
 
-        coptions1 = vbox.require('./vue/test.vue', __dirname)
-
-        coptions2 = vbox.require('./vue/index.js', __dirname)
-
-        // equivalent in memory
-        assert.equal(coptions1, coptions2)
-    })
+            fxHandbag.registers.vue.registerVueAsComponentOptions(vbox, {
+                transpileLib
+            })
+    
+            coptions1 = vbox.require('./vue/test.vue', __dirname)
+    
+            coptions2 = vbox.require('./vue/index.js', __dirname)
+    
+            // equivalent in memory
+            assert.deepEqual(coptions1, coptions2)
+        });
+    });
 })
 
 describe('register: react', () => {
@@ -99,19 +106,25 @@ describe('register: react', () => {
         assert.isFalse(rolledJs.includes('async '))
     })
 
-    it('require react as module', () => {
-        vbox = new vm.SandBox(moduleHash)
-        fxHandbag.registers.react.registerReactAsModule(vbox, {
-            transpileLib: 'buble'
-        })
+    ;[
+        'buble',
+        'babel'
+    ].forEach((transpileLib) => {
+        it(`require react as module: ${transpileLib}`, () => {
+            const vbox = new vm.SandBox(moduleHash)
 
-        coptions1 = vbox.require('./react/test.jsx', __dirname)
-
-        coptions2 = vbox.require('./react/index.js', __dirname)
-
-        // equivalent in memory
-        assert.deepEqual(coptions1, coptions2)
-    })
+            fxHandbag.registers.react.registerReactAsModule(vbox, {
+                transpileLib
+            })
+    
+            coptions1 = vbox.require('./react/test.jsx', __dirname)
+    
+            coptions2 = vbox.require('./react/index.js', __dirname)
+    
+            // equivalent in memory
+            assert.deepEqual(coptions1, coptions2)
+        });
+    });
 })
 
 if (require.main === module) {
