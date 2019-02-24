@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function testBuble () {
+export default function testBuble () {
   const [foo] = React.useState('bar')
 
   function loadResource () {

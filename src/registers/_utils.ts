@@ -10,6 +10,7 @@ export function parseCommonOptions (registerOptions: FxHandbag.RegisterOptions =
     registerOptions.burnout_timeout = registerOptions.burnout_timeout || 0
     registerOptions.hooks = registerOptions.hooks || []
     registerOptions.emitter = registerOptions.emitter || getCommonEmitter(registerOptions.hooks)
+    registerOptions.env = registerOptions.env || 'development'
 
     return registerOptions as FxHandbag.CommonRegisterOptions
 }

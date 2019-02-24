@@ -99,11 +99,5 @@ export function getDefaultPlugins (transpileLib: false | '' | 'buble' | 'babel' 
         })
     ]
 
-    if (isProduction()) {
-        defaultPlugins.push(
-            fibRollup.plugins['rollup-plugin-uglify-js']()
-        )
-    }
-
     return defaultPlugins
 }

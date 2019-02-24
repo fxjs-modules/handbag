@@ -40,6 +40,7 @@ declare namespace FxHandbag {
 		emitter?: Class_EventEmitter,
 		suffix?: string[],
 		compilerOptions?: CompilerOptionsType
+		env?: string
 
 		[key: string]: any
 	}

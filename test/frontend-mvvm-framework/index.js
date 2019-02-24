@@ -11,19 +11,22 @@ describe('register: vue', () => {
 
     it('registerVueAsRollupedJavascript: default/babel mode', () => {
         vbox = new vm.SandBox(moduleHash)
-        fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox)
+        fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
+            env: 'production'
+        })
 
         let rolledJs = null
         rolledJs = vbox.require('./vue/test.vue', __dirname)
 
         assert.isTrue(!rolledJs.includes('const '))
-        assert.isTrue(!rolledJs.includes('async '))
+        assert.isTrue(!rolledJs.includes('async loadResource'))
     })
 
     it('registerVueAsRollupedJavascript: buble mode', () => {
         vbox = new vm.SandBox(moduleHash)
         fxHandbag.registers.vue.registerVueAsRollupedJavascript(vbox, {
-            transpileLib: 'buble'
+            transpileLib: 'buble',
+            env: 'production'
         })
 
         let rolledJs = null
@@ -42,7 +45,7 @@ describe('register: vue', () => {
         rolledJs = vbox.require('./vue/test.vue', __dirname)
 
         assert.isTrue(rolledJs.includes('const '))
-        assert.isTrue(rolledJs.includes('async '))
+        assert.isTrue(rolledJs.includes('async loadResource'))
     })
 
     ;[
@@ -53,12 +56,15 @@ describe('register: vue', () => {
             const vbox = new vm.SandBox(moduleHash)
 
             fxHandbag.registers.vue.registerVueAsComponentOptions(vbox, {
-                transpileLib
+                transpileLib,
+                env: 'production'
             })
     
-            coptions1 = vbox.require('./vue/test.vue', __dirname)
+            const mid_fix = transpileLib === 'buble' ? '.buble' : ''
+
+            coptions1 = vbox.require(`./vue/test${mid_fix}.vue`, __dirname)
     
-            coptions2 = vbox.require('./vue/index.js', __dirname)
+            coptions2 = vbox.require(`./vue/index${mid_fix}.js`, __dirname)
     
             // equivalent in memory
             assert.deepEqual(coptions1, coptions2)

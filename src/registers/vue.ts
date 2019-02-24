@@ -11,12 +11,6 @@ import moduleList = require('@fibjs/builtin-modules')
 
 export const SUFFIX = ['.vue']
 
-const DEFAULT_ROLLUP_PLUGIN_VUE_OPTS = {
-    template: {
-        isProduction: true
-    }
-}
-
 function _register (asModule: boolean) {
     const default_transpileLib = asModule === true ? false : 'babel'
 
@@ -27,20 +21,28 @@ function _register (asModule: boolean) {
         const {
             burnout_timeout = 0,
             suffix = SUFFIX,
-            emitter = null
+            emitter = null,
+            env = ''
         } = parseCommonOptions(options) || {}
 
         const {
-            rollupPluginVueOptions = DEFAULT_ROLLUP_PLUGIN_VUE_OPTS,
+            rollupPluginVueOptions = {},
             tranpileLib = undefined, /* for historical mistake */
             transpileLib = tranpileLib || default_transpileLib,
         } = options || {}
+
+        if (rollupPluginVueOptions) {
+            rollupPluginVueOptions.template = rollupPluginVueOptions.template || {}
+
+            rollupPluginVueOptions.template.optimizeSSR = !!asModule
+            rollupPluginVueOptions.template.isProduction = isProduction(env)
+        }
 
         const rollupConfig = getRollupOptionsFromRegisterOptions(options)
         rollupConfig.bundleConfig = rollupConfig.bundleConfig || {}
         rollupConfig.bundleConfig.plugins = rollupConfig.bundleConfig.plugins || getDefaultPlugins(rollupPluginVueOptions, transpileLib)
 
-        if (isProduction())
+        if (isProduction(env))
             rollupConfig.bundleConfig.plugins.push(
                 fibRollup.plugins['rollup-plugin-uglify-js']()
             )
@@ -85,10 +87,10 @@ function getRequireVBox () {
 
 export function getRollupPluginVue () {
     const rollupPluginRequireVbox = getRequireVBox()
-    return rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname).default
+    return rollupPluginRequireVbox.require('rollup-plugin-vue', __dirname)
 }
 
-export function getDefaultPlugins (rollupPluginVueOptions = {}, transpileLib: false | '' | 'buble' | 'babel' = 'babel') {
+export function getDefaultPlugins (rollupPluginVueOptions: any = {}, transpileLib: false | '' | 'buble' | 'babel' = 'babel') {
     const rollupPluginVue = getRollupPluginVue()
     const useBuble = transpileLib === 'buble'
     const useBabel = transpileLib === 'babel'
@@ -119,12 +121,6 @@ export function getDefaultPlugins (rollupPluginVueOptions = {}, transpileLib: fa
             extensions: ['.js', '.ts']
         })
     ]
-
-    if (isProduction()) {
-        defaultPlugins.push(
-            fibRollup.plugins['rollup-plugin-uglify-js']()
-        )
-    }
 
     return defaultPlugins
 }
