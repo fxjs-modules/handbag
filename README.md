@@ -147,7 +147,7 @@ register compiler to require typescript file as plain javascript string.
 - options.suffix: default `['.ts', '.tsx']`
 - options.rollup
 
-register compiler to require typescript file as module.
+register compiler to specified js-preprocessor file as module.
 
 **extra dependencies**
 - [fib-rollup]
@@ -159,7 +159,7 @@ register compiler to require typescript file as module.
 - options.suffix: default `['.ts', '.tsx']`
 - options.rollup
 
-register compiler to require typescript file as **rolluped** plain javascript string.
+register compiler to specified js-preprocessor file as **rolluped** plain javascript string.
 
 **extra dependencies**
 - [fib-rollup]
@@ -176,7 +176,7 @@ register compiler to require typescript file as **rolluped** plain javascript st
     - 'babel': transpile component with babel
     - 'buble': transpile component with buble
 
-register compiler to require typescript file as **rolluped** plain javascript string
+register compiler to require vue file as **rolluped** plain javascript string
 
 **NOTICE** it's not recommend use `async/await` in vue component, if you do so, the transpiled vue component's size would be large.
 
@@ -190,6 +190,31 @@ it always transpile component js with typescript
 
 - [rollup-plugin-buble] (if use options.transpileLib="buble")
 - [rollup-plugin-typescript] (if use lang="ts")
+     - `tslib`
+     - `typescript`
+
+
+`react.registerReactAsRollupedJavascript(vbox, options)`
+---
+**started from `0.2.7`**
+
+- options.suffix: default `['.ts', '.jsx', '.tsx']`
+- options.rollup
+- options.transpileLib: default `'babel'`
+    - any value equals to `false`: no transpile
+    - 'babel': transpile component with babel
+    - 'buble': transpile component with buble
+
+register compiler to require react file as **rolluped** plain javascript string
+
+**NOTICE** it's not recommend use `async/await` in react component, if you do so, the transpiled vue component's size would be large.
+
+**extra dependencies**
+- [fib-rollup]
+- [rollup-plugin-commonjs]
+
+- [rollup-plugin-buble] (if use options.transpileLib="buble")
+- [rollup-plugin-typescript] (if support suffix `.ts`, `.tsx`)
      - `tslib`
      - `typescript`
 
@@ -278,20 +303,20 @@ there's one `emitter` option with `EventEmitter` type in `registerOptions`, all 
 
 **supported hooks**
 - `before_transpile`
-	- `payload.raw`: original content's buffer
-	- `payload.info`: file information
+	- param `payload.raw`: original content's buffer
+	- param `payload.info`: file information
 - `generated`: payload: {result}
-	- `payload.result`: transpiled content
+	- param `payload.result`: transpiled content
 
 ### `registerOptions.rollup`
 There's register based on rollup, its registerOptions has those options:
 
-- options.rollup.bundleConfig: default `{}`, config passed to
+- `options.rollup.bundleConfig`: default `{}`, config passed to
     - `const bundle = rollup.rollup({...})`
-- options.rollup.writeConfig: default `{}`, config passed to
+- `options.rollup.writeConfig`: default `{}`, config passed to
     - `bundle.write({...})`
     - `bundle.generate({...})`
-- options.rollup.onGenerateUmdName: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
+- `options.rollup.onGenerateUmdName`: default `(buf, info) => 's'`. generate name for rollup's `umd`/`iife` mode
 
 ### `registerOptions.burnout_timeout`
 
