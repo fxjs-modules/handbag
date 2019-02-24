@@ -15,7 +15,8 @@ describe('register feature: hooks', () => {
 
     const test_files = readr(path.resolve(__dirname, '../'))
     const exclude_exts = [
-        '.js'
+        '.js',
+        '.json'
     ]
     const suffixes = Array.from(
         new Set(

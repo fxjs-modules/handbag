@@ -25,5 +25,8 @@ export { rollup }
 import * as vue from './vue'
 export { vue }
 
+import * as react from './react'
+export { react }
+
 import * as riot from './riot'
 export { riot }

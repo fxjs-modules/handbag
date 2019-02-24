@@ -1,4 +1,4 @@
-## vue-todo
+## react-todo
 
 ### Usage
 
@@ -10,6 +10,6 @@ npm start
 
 visit [http://localhost:9090/default/index.html](http://localhost:9090/default/index.html), you can view result like below:
 
-![vue-todo.png]
+![react-todo.png]
 
-[vue-todo.png]:./vue-todo.png
+[react-todo.png]:./react-todo.png
