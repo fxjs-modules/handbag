@@ -32,6 +32,7 @@ declare namespace FxHandbag {
 		emitter: Class_EventEmitter,
 		suffix: string[],
 		compilerOptions: CompilerOptionsTypeCommon
+		env: string
 	}
 
 	interface RegisterOptions<CompilerOptionsType = CompilerOptionsTypeCommon> {

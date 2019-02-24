@@ -56,7 +56,7 @@ function _register (asModule: boolean) {
                     ...rollupConfig.bundleConfig
                 })
 
-                const { code: rollupedJs } = util.sync(bundle.generate, true)({
+                const { output } = util.sync(bundle.generate, true)({
                     ...rollupConfig.writeConfig,
                     output: {
                         format: 'umd',
@@ -64,6 +64,8 @@ function _register (asModule: boolean) {
                         ...rollupConfig.writeConfig.output
                     }
                 })
+
+                const {code: rollupedJs} = output[0]
 
                 return !asModule ? wrapAsString(rollupedJs) : rollupedJs
             },
