@@ -59,13 +59,13 @@ describe('register: vue', () => {
                 transpileLib,
                 env: 'production'
             })
-    
+
             const mid_fix = transpileLib === 'buble' ? '.buble' : ''
 
             coptions1 = vbox.require(`./vue/test${mid_fix}.vue`, __dirname)
-    
+
             coptions2 = vbox.require(`./vue/index${mid_fix}.js`, __dirname)
-    
+
             // equivalent in memory
             assert.deepEqual(coptions1, coptions2)
         });
@@ -86,7 +86,7 @@ describe('register: react', () => {
         assert.isTrue(!rolledJs.includes('async '))
     })
 
-    it('registerReactAsRollupedJavascript: buble mode', () => {
+    xit('registerReactAsRollupedJavascript: buble mode', () => {
         vbox = new vm.SandBox(moduleHash)
         fxHandbag.registers.react.registerReactAsRollupedJavascript(vbox, {
             transpileLib: 'buble'
@@ -113,7 +113,7 @@ describe('register: react', () => {
     })
 
     ;[
-        'buble',
+        // 'buble',
         'babel'
     ].forEach((transpileLib) => {
         it(`require react as module: ${transpileLib}`, () => {
@@ -122,11 +122,11 @@ describe('register: react', () => {
             fxHandbag.registers.react.registerReactAsModule(vbox, {
                 transpileLib
             })
-    
+
             coptions1 = vbox.require('./react/test.jsx', __dirname)
-    
+
             coptions2 = vbox.require('./react/index.js', __dirname)
-    
+
             // equivalent in memory
             assert.deepEqual(coptions1, coptions2)
         });

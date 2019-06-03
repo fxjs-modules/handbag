@@ -29,7 +29,7 @@
     "@fibjs/builtin-modules": "^0.1.0",
     "fib-pug": "0.0.3",
     "fib-rollup": "^0.4.0",
-    "fib-typify": "^0.5.2",
+    "fib-typify": "^0.6.0",
     "riot-compiler": "^3.5.3",
     "stylus": "^0.54.5",
     "uglify-js": "^3.4.9"
@@ -38,8 +38,8 @@
     "@fibjs/ci": "^2.1.0",
     "@fibjs/detect-port": "^1.0.2",
     "@fibjs/fs-readdir-recursive": "^1.0.2",
-    "@types/fibjs": "^0.26.5",
-    "cheerio": "^1.0.0-rc.2",
+    "@fibjs/types": "^0.27.0",
+    "cheerio": "^1.0.0-rc.3",
     "cross-env": "^5.2.0",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
@@ -52,7 +52,7 @@
     "rollup-plugin-typescript": "^1.0.0",
     "rollup-plugin-vue": "^4.7.2",
     "tslib": "^1.9.3",
-    "typescript": "^3.3.3333",
+    "typescript": "^3.5.1",
     "vue-template-compiler": "^2.6.7"
   },
   "ci": {

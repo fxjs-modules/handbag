@@ -70,7 +70,7 @@ export const registerReactAsRollupedJavascript = _register(false)
 export const registerReactAsModule = _register(true)
 
 export function getDefaultPlugins (transpileLib: false | '' | 'buble' | 'babel' = 'babel') {
-    const useBuble = transpileLib === 'buble'
+    // const useBuble = transpileLib === 'buble'
     const useBabel = transpileLib === 'babel'
 
     const defaultPlugins = [
@@ -95,7 +95,9 @@ export function getDefaultPlugins (transpileLib: false | '' | 'buble' | 'babel' 
             typescript: require('typescript'),
             tslib: require('tslib')
         }),
-        ...useBuble ? [require('rollup-plugin-buble')()] : [],
+        // ...useBuble ? [
+		// 	require('rollup-plugin-buble')()
+		// ] : [],
         require('rollup-plugin-commonjs')({
             extensions: ['.js', '.jsx', '.ts', '.tsx']
         })
