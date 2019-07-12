@@ -1,7 +1,13 @@
 
-v0.2.9 / 2019-07-12
+v0.2.10 / 2019-07-12
 ==================
 
+  * feat: when burning out module, use fiber to update module.
+
+v0.2.9 / 2019-07-12
+===================
+
+  * Release v0.2.9
   * bugfix: for nirvana mode, use cache strategy to fix silence after first require.
 
 v0.2.8 / 2019-07-12
