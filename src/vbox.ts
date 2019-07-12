@@ -84,7 +84,6 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 
 		m_caches[mid] = m_caches[mid] || {}
 
-		// const m_md5 = md5(buf)
 		const m_md5 = computeLastModifiedMd5(mid)
 		const md5_changed = m_md5 !== m_caches[mid].md5
 		m_caches[mid].md5 = m_md5
@@ -98,11 +97,13 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
         if (__burnout_timeout) {
 			clear_m_to(mid)
 
-			m_caches[mid].timeout = setTimeout(() => {
-				if (vbox.has(mid)) {
-					lock_cb(() => {
-						vbox.remove(mid)
+			coroutine.start(() => {
+				coroutine.sleep(__burnout_timeout)
 
+				if (vbox.has(mid)) {
+					vbox.remove(mid)
+
+					lock_cb(() => {
 						if (nirvana) {
 							try {
 								vbox.require(mid, __dirname)
@@ -112,7 +113,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 						}
 					})
 				}
-			}, __burnout_timeout)
+			})
         }
 
         if (compile_to_iife_script) {
