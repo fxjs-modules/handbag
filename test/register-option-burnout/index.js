@@ -11,7 +11,7 @@ const os = require('os')
 const readr = require('@fibjs/fs-readdir-recursive')
 const moduleHash = require('@fibjs/builtin-modules/lib/util/get-builtin-module-hash')()
 
-describe('register feature: burnout about options', () => {
+odescribe('register feature: burnout about options', () => {
 	const exclude_exts = ['.js', '.json', '.jsc']
 	const test_files = readr(path.resolve(__dirname, '../'))
 		.filter(fpath => !exclude_exts.some(ext => fpath.endsWith(ext)))
@@ -37,12 +37,12 @@ describe('register feature: burnout about options', () => {
 
 		[-20, 19, true],
 		[-20, 20, true],
-		[-20, 30, false],
-		[-20, 35, false],
-		[-20, 40, false],
-		[-20, 62, false],
-		// [-20, 60, true]
-		// [-20, 65, true]
+		[-20, 30, true],
+		[-20, 35, true],
+		// [-20, 40, false],
+		[-20, 62, true],
+		[-20, 60, true],
+		[-20, 75, true]
 	].forEach(([burnout_timeout, test_timeout, result]) => {
 		describe(`burnout_timeout: ${burnout_timeout}, test_timeout: ${test_timeout}, result: ${result}`, () => {
 			const vbox = new vm.SandBox(moduleHash)

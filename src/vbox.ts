@@ -19,7 +19,12 @@ function computeLastModifiedMd5 (mid: string) {
 		info = fs.stat(mid)
 	} catch (err) {}
 
-	return md5( `${mid}+${info.size}+${info.ctime.getTime() || 0}+${info.mtime.getTime() || 0}` as any )
+	return md5( [
+		mid,
+		info.size,
+		info.ctime.getTime(),
+		info.mtime.getTime()
+	].join('||') as any )
 }
 
 interface SetBurnAfterTimeoutVboxOptions extends FxHandbag.SetVboxOptions {
@@ -117,12 +122,17 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 						sync_lock.acquire();
 						/**
 						 * always delete module, the cache would useful in next-time require(mid)
-						 *
-						 * after 1st removing, you can always get `vbox.has(mid) === false`
 						 */
-						vbox.remove(mid)
-
 						if (new_md5 !== m_caches[mid].md5) {
+							if (emitter)
+								emitter.emit(
+									'nirvana:mchanged',
+									makeHookPayload('nirvana:mchanged',
+										info
+									)
+								)
+
+							vbox.remove(mid)
 							vbox.require(mid, __dirname)
 						}
 

@@ -1,4 +1,4 @@
-/// <reference types="fibjs" />
+/// <reference types="@fibjs/types" />
 
 import util = require('util')
 import events = require('events')
@@ -8,8 +8,8 @@ export function parseCommonOptions (registerOptions: FxHandbag.RegisterOptions =
     // registerOptions.compilerOptions = registerOptions.compilerOptions
 
     registerOptions.burnout_timeout = registerOptions.burnout_timeout || 0
-    registerOptions.hooks = registerOptions.hooks || []
-    registerOptions.emitter = registerOptions.emitter || getCommonEmitter(registerOptions.hooks)
+    registerOptions.hooks = registerOptions.hooks || {}
+    registerOptions.emitter = getCommonEmitter(registerOptions.emitter, registerOptions.hooks)
     registerOptions.env = registerOptions.env || 'development'
 
     return registerOptions as FxHandbag.CommonRegisterOptions
@@ -29,26 +29,29 @@ export function getRollupOptionsFromRegisterOptions (registerOptions: FxHandbag.
     return rollup
 }
 
-export function getCommonEmitter (onHooks): Class_EventEmitter {
-    const emitter: any = new events.EventEmitter()
-
+export function getCommonEmitter (
+	emitter: Class_EventEmitter,
+	onHooks: FxHandbag.RegisterOptions['hooks']
+): Class_EventEmitter {
+	emitter = emitter || new events.EventEmitter()
     if (!util.isObject(onHooks))
         return emitter
 
     Object.keys(onHooks).forEach(hook_key => {
         let handler = onHooks[hook_key], is_once = false
-        if (util.isFunction(handler)) {
-        } else if (util.isObject(handler)) {
-            handler = handler.handler
-            is_once = handler.is_once
+        if (typeof handler === 'function') {
+        } else if (typeof handler === 'object') {
+			const { handler: _handler, is_once: _is_once = false } = handler
+			handler = _handler
+			is_once = _is_once
         } else {
             console.error('invalid hook type, it must be object or function.')
         }
 
-        if (!is_once)
-            emitter.on(hook_key, handler)
+        if (is_once)
+            emitter.once(hook_key, handler)
         else
-            emitter.off(hook_key, handler)
+            emitter.on(hook_key, handler)
     })
 
     return emitter
@@ -68,6 +71,9 @@ export function makeHookPayload (type: string, ...args: any[]): {[key: string]: 
             break
         case 'generated':
             payload = {result: args[0]}
+			break
+        case 'nirvana:mchanged':
+            payload = {info: args[0], prev: args[1], current: args[2]}
             break
     }
 

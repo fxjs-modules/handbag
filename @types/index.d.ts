@@ -28,7 +28,7 @@ declare namespace FxHandbag {
 
 	interface CommonRegisterOptions {
 		burnout_timeout: number,
-		hooks: Function[],
+		hooks: RegisterOptions['hooks'],
 		emitter: Class_EventEmitter,
 		suffix: string[],
 		compilerOptions: CompilerOptionsTypeCommon
@@ -37,7 +37,12 @@ declare namespace FxHandbag {
 
 	interface RegisterOptions<CompilerOptionsType = CompilerOptionsTypeCommon> {
 		burnout_timeout?: number,
-		hooks?: Function[],
+		hooks?: {
+			[k: string]: Function | {
+				is_once?: boolean
+				handler: Function
+			}
+		},
 		emitter?: Class_EventEmitter,
 		suffix?: string[],
 		compilerOptions?: CompilerOptionsType
