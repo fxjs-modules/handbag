@@ -1,6 +1,7 @@
 /// <reference path="../@types/index.d.ts" />
 
 import coroutine = require('coroutine')
+import fs = require('fs')
 import hash = require('hash')
 import { makeHookPayload } from './registers/_utils';
 
@@ -8,19 +9,36 @@ function isValidSuffx (suffix: string) {
     return typeof suffix === 'string' && suffix && suffix[0] === '.'
 }
 
+function md5 (buf: Class_Buffer) {
+	return hash.md5(buf).digest('hex')
+}
+
+function computeLastModifiedMd5 (mid: string) {
+	let info = <Class_Stat>{}
+	try {
+		info = fs.stat(mid)
+	} catch (err) {}
+
+	return md5( `${mid}+${info.size}+${info.ctime.getTime() || 0}+${info.mtime.getTime() || 0}` as any )
+}
+
 interface SetBurnAfterTimeoutVboxOptions extends FxHandbag.SetVboxOptions {
     timeout?: number
 }
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
-    const m_caches = {}
+    const m_caches = <{[mid: string]: {
+		md5?: string
+		timeout?: any
+		compiledScript?: string
+	}}>{}
 	function clear_m_to (mid: string | number) {
 		if (!m_caches[mid])
 			return ;
 
-		if (m_caches[mid].timeout)
+		if (m_caches[mid].timeout) {
 			clearTimeout(m_caches[mid].timeout)
-
-		m_caches[mid].timeout = null
+			m_caches[mid].timeout = null
+		}
 	}
 
     const {
@@ -61,41 +79,38 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 	}
 
     function compilerFn (buf: Class_Buffer, info: any) {
-        let compiledContent = finalCompiler(buf, info)
-
         const {filename: mid = ''} = info || {}
+		let compiledContent = null as string
 
-		clear_m_to(mid)
+		m_caches[mid] = m_caches[mid] || {}
+
+		// const m_md5 = md5(buf)
+		const m_md5 = computeLastModifiedMd5(mid)
+		const md5_changed = m_md5 !== m_caches[mid].md5
+		m_caches[mid].md5 = m_md5
+
+		if (nirvana && !md5_changed && m_caches[mid].compiledScript) {
+			compiledContent = m_caches[mid].compiledScript
+		} else {
+	        m_caches[mid].compiledScript = compiledContent = finalCompiler(buf, info)
+		}
 
         if (__burnout_timeout) {
-            m_caches[mid] = m_caches[mid] || {}
-
-			const m_md5 = hash.md5(buf).digest('hex')
-
-			const md5_changed = m_md5 !== m_caches[mid].md5
-			m_caches[mid].md5 = m_md5
+			clear_m_to(mid)
 
 			m_caches[mid].timeout = setTimeout(() => {
 				if (vbox.has(mid)) {
-					if (nirvana) {
-						lock_cb(() => {
-							if (!md5_changed) {
-								return ;
-							}
+					lock_cb(() => {
+						vbox.remove(mid)
 
+						if (nirvana) {
 							try {
-								vbox.remove(mid)
 								vbox.require(mid, __dirname)
 							} catch (e) {
 								clear_m_to(mid)
-							} finally {
-							}
-						})
-					} else {
-						lock_cb(() => {
-							vbox.remove(mid)
-						})
-					}
+							} finally {}
+						}
+					})
 				}
 			}, __burnout_timeout)
         }
