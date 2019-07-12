@@ -1,7 +1,15 @@
 
-v0.2.7 / 2019-02-25
+v0.2.8 / 2019-07-12
 ==================
 
+  * upgrade dependencies
+  * feat: in nirvana mode, only re-require when module's md5 changed.
+  * stop support pack .jsx by buble.
+
+v0.2.7 / 2019-02-25
+===================
+
+  * Release v0.2.7
   * upgrade dependencies, adapt fib-rollup v0.4.0(due to its dependency on rollup v1 rather v0.66.x)
   * robust.
   * little fix.
