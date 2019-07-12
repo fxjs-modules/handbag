@@ -1,7 +1,15 @@
 
-v0.2.10 / 2019-07-12
+v0.3.0 / 2019-07-13
 ==================
 
+  * feat: support RegisterOptions['hooks'], change behaviors in nirvana mode.
+  * feat: robust.
+  * feat: use watcher&remover in nirvana mode, which would make nirvana mode hard to test
+
+v0.2.10 / 2019-07-12
+====================
+
+  * Release v0.2.10
   * feat: when burning out module, use fiber to update module.
 
 v0.2.9 / 2019-07-12
