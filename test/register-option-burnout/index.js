@@ -35,12 +35,14 @@ describe('register feature: burnout about options', () => {
 		[310, 290, true],
 		[321, 301, true],
 
-		// [-50, 51, true],
-		[-50, 60, true],
-		// [-20, 30, true],
-		[-20, 35, true],
+		[-20, 19, true],
+		[-20, 20, true],
+		[-20, 30, false],
+		[-20, 35, false],
+		[-20, 40, false],
+		[-20, 62, false],
 		// [-20, 60, true]
-		[-20, 65, true]
+		// [-20, 65, true]
 	].forEach(([burnout_timeout, test_timeout, result]) => {
 		describe(`burnout_timeout: ${burnout_timeout}, test_timeout: ${test_timeout}, result: ${result}`, () => {
 			const vbox = new vm.SandBox(moduleHash)
@@ -60,16 +62,16 @@ describe('register feature: burnout about options', () => {
 				it(`test file ${relpath}`, () => {
 					// force remove abspath
 
-					let range = Date.now()
+					let r1 = process.hrtime()
 					vbox.require(relpath, __dirname)
-					range = Date.now() - range
+					const [ sec ] = process.hrtime(r1)
 
-					if (burnout_timeout > 0 && test_timeout - range <= 0)
+					if (burnout_timeout > 0 && test_timeout - sec <= 0)
 						result = true
 					else
-						coroutine.sleep(test_timeout - range)
+						coroutine.sleep(test_timeout - sec)
 
-					assert.equal(vbox.has(vbox.resolve(relpath, __dirname)), result)
+					assert.equal(vbox.has(abspath), result)
 
 					vbox.remove(abspath)
 				})

@@ -88,9 +88,8 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 		/* do require, but if cache existed, use cached script string */
 		;(() => {
 			const m_md5 = computeLastModifiedMd5(mid)
-			const md5_changed = m_md5 !== m_caches[mid].md5
 
-			if (nirvana && !md5_changed && m_caches[mid].compiledScript) {
+			if (m_md5 === m_caches[mid].md5 && m_caches[mid].compiledScript) {
 				compiledContent = m_caches[mid].compiledScript
 			} else {
 				m_caches[mid].compiledScript = compiledContent = finalCompiler(buf, info)
@@ -116,9 +115,16 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 						const new_md5 = computeLastModifiedMd5(mid)
 
 						sync_lock.acquire();
-						/* always delete module, the cache would useful in next-time require(mid) */
+						/**
+						 * always delete module, the cache would useful in next-time require(mid)
+						 *
+						 * after 1st removing, you can always get `vbox.has(mid) === false`
+						 */
 						vbox.remove(mid)
-						vbox.require(mid, __dirname)
+
+						if (new_md5 !== m_caches[mid].md5) {
+							vbox.require(mid, __dirname)
+						}
 
 						sync_lock.release();
 					}
