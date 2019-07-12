@@ -1,6 +1,7 @@
 /// <reference path="../@types/index.d.ts" />
 
 import coroutine = require('coroutine')
+import hash = require('hash')
 import { makeHookPayload } from './registers/_utils';
 
 function isValidSuffx (suffix: string) {
@@ -11,13 +12,15 @@ interface SetBurnAfterTimeoutVboxOptions extends FxHandbag.SetVboxOptions {
     timeout?: number
 }
 function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTimeoutVboxOptions) {
-    const timeouts = {}
+    const m_caches = {}
+	function clear_m_to (mid: string | number) {
+		if (!m_caches[mid])
+			return ;
 
-	function clear_mid (mid: string | number) {
-		if (timeouts[mid])
-			clearTimeout(timeouts[mid])
+		if (m_caches[mid].timeout)
+			clearTimeout(m_caches[mid].timeout)
 
-		timeouts[mid] = null
+		m_caches[mid].timeout = null
 	}
 
     const {
@@ -51,31 +54,50 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
     }
 
     const sync_lock = new coroutine.Lock();
+	const lock_cb = (cb) => {
+		sync_lock.acquire()
+		cb()
+		sync_lock.release()
+	}
 
     function compilerFn (buf: Class_Buffer, info: any) {
         let compiledContent = finalCompiler(buf, info)
 
         const {filename: mid = ''} = info || {}
 
-        if (timeouts[mid])
-			clear_mid(mid)
+		clear_m_to(mid)
 
         if (__burnout_timeout) {
-            timeouts[mid] = setTimeout(() => {
-                if (vbox.has(mid)) {
-                    sync_lock.acquire()
-                    vbox.remove(mid)
+            m_caches[mid] = m_caches[mid] || {}
+
+			const m_md5 = hash.md5(buf).digest('hex')
+
+			const md5_changed = m_md5 !== m_caches[mid].md5
+			m_caches[mid].md5 = m_md5
+
+			m_caches[mid].timeout = setTimeout(() => {
+				if (vbox.has(mid)) {
 					if (nirvana) {
-						try {
-							vbox.require(mid, __dirname)
-						} catch (e) {
-							clear_mid(mid)
-						} finally {
-						}
+						lock_cb(() => {
+							if (!md5_changed) {
+								return ;
+							}
+
+							try {
+								vbox.remove(mid)
+								vbox.require(mid, __dirname)
+							} catch (e) {
+								clear_m_to(mid)
+							} finally {
+							}
+						})
+					} else {
+						lock_cb(() => {
+							vbox.remove(mid)
+						})
 					}
-                    sync_lock.release()
-                }
-            }, __burnout_timeout)
+				}
+			}, __burnout_timeout)
         }
 
         if (compile_to_iife_script) {
