@@ -34,9 +34,13 @@ describe('register feature: burnout about options', () => {
 		[310, 301, true],
 		[310, 290, true],
 		[321, 301, true],
-		[-50, 51, true],
-		[-20, 30, true],
-		[-20, 60, true]
+
+		// [-50, 51, true],
+		[-50, 60, true],
+		// [-20, 30, true],
+		[-20, 35, true],
+		// [-20, 60, true]
+		[-20, 65, true]
 	].forEach(([burnout_timeout, test_timeout, result]) => {
 		describe(`burnout_timeout: ${burnout_timeout}, test_timeout: ${test_timeout}, result: ${result}`, () => {
 			const vbox = new vm.SandBox(moduleHash)

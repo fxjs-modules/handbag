@@ -30,6 +30,7 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 		md5?: string
 		timeout?: any
 		compiledScript?: string
+		w_fiber?: Class_Fiber
 	}}>{}
 	function clear_m_to (mid: string | number) {
 		if (!m_caches[mid])
@@ -84,36 +85,45 @@ function setBurnAfterTimeoutVbox (vbox: Class_SandBox, options: SetBurnAfterTime
 
 		m_caches[mid] = m_caches[mid] || {}
 
-		const m_md5 = computeLastModifiedMd5(mid)
-		const md5_changed = m_md5 !== m_caches[mid].md5
-		m_caches[mid].md5 = m_md5
+		/* do require, but if cache existed, use cached script string */
+		;(() => {
+			const m_md5 = computeLastModifiedMd5(mid)
+			const md5_changed = m_md5 !== m_caches[mid].md5
 
-		if (nirvana && !md5_changed && m_caches[mid].compiledScript) {
-			compiledContent = m_caches[mid].compiledScript
-		} else {
-	        m_caches[mid].compiledScript = compiledContent = finalCompiler(buf, info)
-		}
+			if (nirvana && !md5_changed && m_caches[mid].compiledScript) {
+				compiledContent = m_caches[mid].compiledScript
+			} else {
+				m_caches[mid].compiledScript = compiledContent = finalCompiler(buf, info)
+				m_caches[mid].md5 = m_md5;
+			}
+		})()
 
         if (__burnout_timeout) {
 			clear_m_to(mid)
 
-			coroutine.start(() => {
-				coroutine.sleep(__burnout_timeout)
+			if (!nirvana) {
+				m_caches[mid].timeout = setTimeout(() => {
+					if (vbox.has(mid)) {
+						lock_cb(() => {
+							vbox.remove(mid)
+						})
+					}
+				}, __burnout_timeout)
+			} else {
+				m_caches[mid].w_fiber = m_caches[mid].w_fiber || coroutine.start(() => {
+					while (true) {
+						coroutine.sleep(__burnout_timeout)
+						const new_md5 = computeLastModifiedMd5(mid)
 
-				if (vbox.has(mid)) {
-					vbox.remove(mid)
+						sync_lock.acquire();
+						/* always delete module, the cache would useful in next-time require(mid) */
+						vbox.remove(mid)
+						vbox.require(mid, __dirname)
 
-					lock_cb(() => {
-						if (nirvana) {
-							try {
-								vbox.require(mid, __dirname)
-							} catch (e) {
-								clear_m_to(mid)
-							} finally {}
-						}
-					})
-				}
-			})
+						sync_lock.release();
+					}
+				})
+			}
         }
 
         if (compile_to_iife_script) {
