@@ -1,7 +1,13 @@
 
-v0.2.8 / 2019-07-12
+v0.2.9 / 2019-07-12
 ==================
 
+  * bugfix: for nirvana mode, use cache strategy to fix silence after first require.
+
+v0.2.8 / 2019-07-12
+===================
+
+  * Release v0.2.8
   * upgrade dependencies
   * feat: in nirvana mode, only re-require when module's md5 changed.
   * stop support pack .jsx by buble.
