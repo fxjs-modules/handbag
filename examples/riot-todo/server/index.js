@@ -9,7 +9,14 @@ const detectPort = require('@fibjs/detect-port');
 const port = detectPort(process.env.PORT);
 
 const vbox = new vm.SandBox({});
-const commonOptions = { burnout_timeout: -2000 };
+const commonOptions = {
+	burnout_timeout: -500,
+	hooks: {
+		'nirvana:mchanged' ({ info }) {
+			console.log('[riot]mchanged', info)
+		}
+	}
+};
 fxHb.registers.riot.registerRiotAsJs(vbox, {...commonOptions})
 fxHb.registers.plain.registerAsPlain(vbox, {...commonOptions, suffix: ['.html']})
 

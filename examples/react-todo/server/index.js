@@ -10,7 +10,14 @@ const moduleList = require('@fibjs/builtin-modules')
 const port = detectPort(process.env.PORT);
 
 const vbox = new vm.SandBox({});
-const commonOptions = { burnout_timeout: -2000 };
+const commonOptions = {
+	burnout_timeout: -500,
+	hooks: {
+		'nirvana:mchanged' ({ info }) {
+			console.log('[react]mchanged', info)
+		}
+	}
+};
 
 ;[
 	['iife', ['.jsx', '.tsx']],
